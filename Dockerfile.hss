@@ -1,0 +1,7 @@
+FROM hss
+WORKDIR /root/son-vm
+RUN git pull
+RUN python3 setup.py install
+COPY hss.conf /root/son-vm/server.conf
+COPY hss.sh /root/son-vm/start.sh
+CMD "/root/son-vm/start.sh"

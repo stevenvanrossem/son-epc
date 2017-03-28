@@ -1,0 +1,7 @@
+FROM sgw
+WORKDIR /root/son-vm
+RUN git pull
+RUN python3 setup.py install
+COPY spgw.conf /root/son-vm/server.conf
+COPY spgw.sh /root/son-vm/start.sh
+CMD "/root/son-vm/start.sh"

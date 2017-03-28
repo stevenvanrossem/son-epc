@@ -1,0 +1,7 @@
+FROM mme
+WORKDIR /root/son-vm
+RUN git pull
+RUN python3 setup.py install
+COPY mme.conf /root/son-vm/server.conf
+COPY mme.sh /root/son-vm/start.sh
+CMD "/root/son-vm/start.sh"

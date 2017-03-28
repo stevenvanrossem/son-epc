@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  mme:
+    build:
+      context: .
+      dockerfile: Dockerfile.mme
+    image: mme:SNAPSHOT
+    container_name: mme
+
+  hss:
+    build:
+      context: .
+      dockerfile: Dockerfile.hss
+    image: hss:SNAPSHOT
+    container_name: hss
+
+  spgw:
+    build:
+      context: .
+      dockerfile: Dockerfile.spgw
+    image: spgw:SNAPSHOT
+    container_name: spgw
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+      - SYS_MODULE
