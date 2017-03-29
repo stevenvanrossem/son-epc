@@ -12,4 +12,10 @@ echo "$hss_host: $hss_mgmt ($hss_data)"
 echo "$mme_host: $mme_mgmt ($mme_data)"
 echo "$spgw_host: $spgw_mgmt ($spgw_data)"
 
-son-vm-client --hss_mgmt $hss_mgmt --hss_data $hss_data --mme_mgmt $mme_mgmt --mme_data $mme_data --spgw_mgmt $spgw_mgmt --spgw_data $spgw_data --hss_host $hss_host --mme_host $mme_host --spgw_host $spgw_host $@
+args="--hss_mgmt $hss_mgmt --hss_data $hss_data"
+args+=" --mme_mgmt $mme_mgmt --mme_data $mme_data"
+args+=" --spgw_mgmt $spgw_mgmt --spgw_data $spgw_data"
+args+=" --hss_host $hss_host --mme_host $mme_host --spgw_host $spgw_host"
+args+=" --mme_s1_ip $mme_data"
+args+=" --spgw_s1_ip $spgw_data --spgw_sgi_ip $spgw_data"
+son-vm-client $args $@
