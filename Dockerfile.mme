@@ -4,4 +4,7 @@ RUN git pull
 RUN python3 setup.py install
 COPY mme.conf /root/son-vm/server.conf
 COPY mme.sh /root/son-vm/start.sh
-CMD "/root/son-vm/start.sh"
+
+ENV SON_EMU_CMD "/root/son-vm/start.sh"
+
+CMD /bin/bash
