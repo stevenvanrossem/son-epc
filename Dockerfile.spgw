@@ -7,7 +7,8 @@ COPY spgw.sh /root/son-vm/start.sh
 
 RUN	apt-get update && apt-get install -y \
 	net-tools \
-	iproute
+	iproute \
+	iputils-ping
 
 ENV SON_EMU_CMD "/root/son-vm/start.sh"
 
