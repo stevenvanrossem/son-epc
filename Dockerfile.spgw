@@ -4,4 +4,13 @@ RUN git pull
 RUN python3 setup.py install
 COPY spgw.conf /root/son-vm/server.conf
 COPY spgw.sh /root/son-vm/start.sh
-CMD "/root/son-vm/start.sh"
+
+RUN	apt-get update && apt-get install -y \
+	net-tools \
+	iproute \
+	iputils-ping
+
+ENV SON_EMU_CMD "/root/son-vm/start.sh"
+
+CMD /bin/bash
+
