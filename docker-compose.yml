@@ -7,6 +7,7 @@ services:
       dockerfile: Dockerfile.mme
     image: mme:SNAPSHOT
     container_name: mme
+    command: /root/son-vm/start.sh
 
   hss:
     build:
@@ -14,6 +15,7 @@ services:
       dockerfile: Dockerfile.hss
     image: hss:SNAPSHOT
     container_name: hss
+    command: /root/son-vm/start.sh
 
   spgw:
     build:
@@ -25,3 +27,4 @@ services:
       - NET_ADMIN
       - NET_RAW
       - SYS_MODULE
+    command: /root/son-vm/start.sh
