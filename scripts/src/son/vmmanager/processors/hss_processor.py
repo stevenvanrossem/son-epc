@@ -61,6 +61,7 @@ class HSS_Configurator(utils.ConfiguratorHelpers):
     MYSQL_MME_HOST_COLUMN = 'mmehost'
     MYSQL_MME_REALM_COLUMN = 'mmerealm'
     MYSQL_MME_UE_REACH_COLUMN = 'UE-Reachability'
+    MYSQL_MME_ID = 'idmmeidentity'
     MYSQL_USERS_TABLE = 'users'
     MYSQL_USERS_MMEIDENTITY = 'mmeidentity_idmmeidentity'
 
@@ -231,7 +232,7 @@ class HSS_Configurator(utils.ConfiguratorHelpers):
                     return self.fail('Unable to add MME into MySQL')
 
                 mme_row = cursor.fetchone()
-                mme_id = mme_row[0]
+                mme_id = mme_row[self.MYSQL_MME_ID]
                 self.logger.debug('MME got ID: %s', mme_id)
                 with connection.cursor() as update_cursor:
                     update_cursor.execute(self.MYSQL_UPDATE, (mme_id))
