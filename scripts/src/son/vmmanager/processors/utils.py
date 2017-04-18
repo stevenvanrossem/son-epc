@@ -282,7 +282,7 @@ class CertificateConfigurator(ConfiguratorHelpers):
 class Runner(object):
 
     def __init__(self, executable, log_dir=None,
-                 start_shell=False, arguments = None):
+                 start_shell=False, arguments = ''):
         self.logger = logging.getLogger(Runner.__name__)
         self._executable = os.path.expanduser(executable)
         self._task = None
