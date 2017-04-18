@@ -281,21 +281,25 @@ class CertificateConfigurator(ConfiguratorHelpers):
 
 class Runner(object):
 
-    def __init__(self, executable, log_dir=None, start_shell=False):
+    def __init__(self, executable, log_dir=None,
+                 start_shell=False, arguments = None):
         self.logger = logging.getLogger(Runner.__name__)
         self._executable = os.path.expanduser(executable)
         self._task = None
         self._isShell = start_shell
         self._std_contents = {1: "", 2: ""}
         self._log_dir = log_dir
+        self._arguments = arguments
 
     def start(self):
         if self._task is not None:
             return P.Result.fail('Unable to start task %s, '
                                  'it\'s already started', self._executable)
 
-        self.logger.debug("Starting task %s", self._executable)
-        self._task = subprocess.Popen(self._executable,
+        self.logger.debug("Starting task %s with arguments %s",
+                          self._executable, self._arguments)
+        cmd = '%s %s' % (self._executable, self._arguments)
+        self._task = subprocess.Popen(cmd,
                                       stdin = subprocess.PIPE,
                                       stdout = subprocess.PIPE,
                                       stderr = subprocess.PIPE,
@@ -429,4 +433,5 @@ class Runner(object):
     def getReturnCode(self):
         return self._task.poll()
 
-
+    def setArguments(self, arguments):
+        self._arguments = arguments

@@ -1,4 +1,4 @@
-import son.vmmanager.processors.hss_processor as hss_p
+import son.vmmanager.processors.oai.hss_processor as hss_p
 from son.vmmanager.processors.utils import CommandConfig
 from son.vmmanager.jsonserver import IJsonProcessor as P
 
@@ -14,8 +14,8 @@ logging.basicConfig(level=logging.DEBUG)
 class HSS_Processor(unittest.TestCase):
 
     @patch('son.vmmanager.processors.utils.Runner')
-    @patch('son.vmmanager.processors.hss_processor.HSS_Configurator')
-    @patch('son.vmmanager.processors.hss_processor.HSS_MessageParser')
+    @patch('son.vmmanager.processors.oai.hss_processor.HSS_Configurator')
+    @patch('son.vmmanager.processors.oai.hss_processor.HSS_MessageParser')
     def testProcess(self, HSS_MessageParserMock, HSS_ConfiguratorMock, RunnerMock):
         HSS_MessageParserMock.return_value = Mock(wraps = HSS_MessageParserMock)
         HSS_ConfiguratorMock.return_value = Mock(wraps = HSS_ConfiguratorMock)
@@ -35,8 +35,8 @@ class HSS_Processor(unittest.TestCase):
         RunnerMock.assert_called_once()
 
     @patch('son.vmmanager.processors.utils.Runner')
-    @patch('son.vmmanager.processors.hss_processor.HSS_Configurator')
-    @patch('son.vmmanager.processors.hss_processor.HSS_MessageParser')
+    @patch('son.vmmanager.processors.oai.hss_processor.HSS_Configurator')
+    @patch('son.vmmanager.processors.oai.hss_processor.HSS_MessageParser')
     def testProcessIssueCommand(self, HSS_MessageParserMock,
                                 HSS_ConfiguratorMock, RunnerMock):
         HSS_MessageParserMock.return_value = Mock(wraps = HSS_MessageParserMock)

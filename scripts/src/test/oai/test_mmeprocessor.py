@@ -1,4 +1,4 @@
-import son.vmmanager.processors.mme_processor as mme_p
+import son.vmmanager.processors.oai.mme_processor as mme_p
 from son.vmmanager.processors.utils import CommandConfig
 
 from unittest.mock import patch
@@ -13,8 +13,8 @@ logging.basicConfig(level=logging.DEBUG)
 class MME_Processor(unittest.TestCase):
 
     @patch('son.vmmanager.processors.utils.Runner')
-    @patch('son.vmmanager.processors.mme_processor.MME_Configurator')
-    @patch('son.vmmanager.processors.mme_processor.MME_MessageParser')
+    @patch('son.vmmanager.processors.oai.mme_processor.MME_Configurator')
+    @patch('son.vmmanager.processors.oai.mme_processor.MME_MessageParser')
     def testProcess(self, MME_MessageParserMock, MME_ConfiguratorMock, RunnerMock):
         MME_MessageParserMock.return_value = Mock(wraps = MME_MessageParserMock)
         MME_ConfiguratorMock.return_value = Mock(wraps = MME_ConfiguratorMock)
@@ -34,8 +34,8 @@ class MME_Processor(unittest.TestCase):
         RunnerMock.assert_called_once()
 
     @patch('son.vmmanager.processors.utils.Runner')
-    @patch('son.vmmanager.processors.mme_processor.MME_Configurator')
-    @patch('son.vmmanager.processors.mme_processor.MME_MessageParser')
+    @patch('son.vmmanager.processors.oai.mme_processor.MME_Configurator')
+    @patch('son.vmmanager.processors.oai.mme_processor.MME_MessageParser')
     def testProcessIssueCommand(self, MME_MessageParserMock,
                                 MME_ConfiguratorMock, RunnerMock):
         MME_MessageParserMock.return_value = Mock(wraps = MME_MessageParserMock)

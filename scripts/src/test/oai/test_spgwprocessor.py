@@ -1,4 +1,4 @@
-import son.vmmanager.processors.spgw_processor as spgw_p
+import son.vmmanager.processors.oai.spgw_processor as spgw_p
 from son.vmmanager.processors.utils import CommandConfig
 
 from unittest.mock import patch
@@ -13,8 +13,8 @@ logging.basicConfig(level=logging.DEBUG)
 class SPGW_Processor(unittest.TestCase):
 
     @patch('son.vmmanager.processors.utils.Runner')
-    @patch('son.vmmanager.processors.spgw_processor.SPGW_Configurator')
-    @patch('son.vmmanager.processors.spgw_processor.SPGW_MessageParser')
+    @patch('son.vmmanager.processors.oai.spgw_processor.SPGW_Configurator')
+    @patch('son.vmmanager.processors.oai.spgw_processor.SPGW_MessageParser')
     def testProcess(self, SPGW_MessageParserMock, SPGW_ConfiguratorMock, RunnerMock):
         SPGW_MessageParserMock.return_value = Mock(wraps = SPGW_MessageParserMock)
         SPGW_ConfiguratorMock.return_value = Mock(wraps = SPGW_ConfiguratorMock)
@@ -34,8 +34,8 @@ class SPGW_Processor(unittest.TestCase):
         RunnerMock.assert_called_once()
 
     @patch('son.vmmanager.processors.utils.Runner')
-    @patch('son.vmmanager.processors.spgw_processor.SPGW_Configurator')
-    @patch('son.vmmanager.processors.spgw_processor.SPGW_MessageParser')
+    @patch('son.vmmanager.processors.oai.spgw_processor.SPGW_Configurator')
+    @patch('son.vmmanager.processors.oai.spgw_processor.SPGW_MessageParser')
     def testProcessIssueCommand(self, SPGW_MessageParserMock,
                                 SPGW_ConfiguratorMock, RunnerMock):
         SPGW_MessageParserMock.return_value = Mock(wraps = SPGW_MessageParserMock)
