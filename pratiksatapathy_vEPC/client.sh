@@ -9,6 +9,7 @@ hss_host=`sudo docker inspect hss_pp | jq '.[0].Config.Hostname' | sed 's/"//g'`
 mme_host=`sudo docker inspect mme_pp | jq '.[0].Config.Hostname' | sed 's/"//g'`
 pgw_host=`sudo docker inspect pgw_pp | jq '.[0].Config.Hostname' | sed 's/"//g'`
 sgw_host=`sudo docker inspect sgw_pp | jq '.[0].Config.Hostname' | sed 's/"//g'`
+ds_ip=$hss_data
 
 echo "$hss_host: $hss_mgmt ($hss_data)"
 echo "$mme_host: $mme_mgmt ($mme_data)"
@@ -22,4 +23,5 @@ args+=" --pgw_mgmt $pgw_mgmt --sgw_s5_ip $spgw_data --pgw_s5_ip $spgw_data --sin
 args+=" --hss_host $hss_host --mme_host $mme_host --spgw_host $sgw_host"
 args+=" --mme_s1_ip $mme_data"
 args+=" --spgw_s1_ip $spgw_data --spgw_sgi_ip $spgw_data"
+args+=" --ds_ip $ds_ip"
 son-vm-client $args $@
