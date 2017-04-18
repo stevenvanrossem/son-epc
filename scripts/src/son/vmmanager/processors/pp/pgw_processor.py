@@ -6,22 +6,24 @@ import logging
 
 class PGW_MessageParser(object):
 
-    MSG_S5_THREADS_COUNT = "s5_threads_count"
-    MSG_SGI_THREADS_COUNT = "sgi_threads_count"
-    MSG_SGW_S5_IP = "sgw_s5_ip"
-    MSG_PGW_S5_IP = "pgw_s5_ip"
-    MSG_PGW_SGI_IP = "pgw_sgi_ip"
-    MSG_SINK_IP_ADDR = "sink_ip_addr"
-    MSG_SGW_S5_PORT = "sgw_s5_port"
-    MSG_PGW_S5_PORT = "pgw_s5_port"
-    MSG_PGW_SGI_PORT = "pgw_sgi_port"
-    MSG_SINK_PORT = "sink_port"
+    MSG_S5_THREADS_COUNT = 's5_threads_count'
+    MSG_SGI_THREADS_COUNT = 'sgi_threads_count'
+    MSG_SGW_S5_IP = 'sgw_s5_ip'
+    MSG_PGW_S5_IP = 'pgw_s5_ip'
+    MSG_PGW_SGI_IP = 'pgw_sgi_ip'
+    MSG_SINK_IP_ADDR = 'sink_ip_addr'
+    MSG_DS_IP = 'ds_ip'
+    MSG_SGW_S5_PORT = 'sgw_s5_port'
+    MSG_PGW_S5_PORT = 'pgw_s5_port'
+    MSG_PGW_SGI_PORT = 'pgw_sgi_port'
+    MSG_SINK_PORT = 'sink_port'
 
     MSG = [MSG_S5_THREADS_COUNT, MSG_SGI_THREADS_COUNT,
            MSG_SGW_S5_IP, MSG_PGW_S5_IP,
-           MSG_PGW_SGI_IP, MSG_SINK_IP_ADDR,
-           MSG_SGW_S5_PORT, MSG_PGW_S5_PORT,
-           MSG_PGW_SGI_PORT, MSG_SINK_PORT]
+           MSG_PGW_SGI_IP, MSG_DS_IP,
+           MSG_SINK_IP_ADDR, MSG_SGW_S5_PORT,
+           MSG_PGW_S5_PORT, MSG_PGW_SGI_PORT,
+           MSG_SINK_PORT]
 
     def __init__(self, json_dict):
         self.logger = logging.getLogger(PGW_MessageParser.__name__)
@@ -42,14 +44,16 @@ class PGW_Config(utils.CommandConfig):
 
     def __init__(self, s5_threads_count = None, sgi_threads_count = None,
                  sgw_s5_ip = None, pgw_s5_ip = None, pgw_sgi_ip = None,
-                 sink_ip_addr = None, sgw_s5_port = None, pgw_s5_port = None,
-                 pgw_sgi_port = None, sink_port = None, **kwargs):
+                 sink_ip_addr = None, ds_ip = None, sgw_s5_port = None,
+                 pgw_s5_port = None, pgw_sgi_port = None, sink_port = None,
+                 **kwargs):
         self.s5_threads_count = s5_threads_count
         self.sgi_threads_count = sgi_threads_count
         self.sgw_s5_ip = sgw_s5_ip
         self.pgw_s5_ip = pgw_s5_ip
         self.pgw_sgi_ip = pgw_sgi_ip
         self.sink_ip_addr = sink_ip_addr
+        self.ds_ip = ds_ip
         self.sgw_s5_port = sgw_s5_port
         self.pgw_s5_port = pgw_s5_port
         self.pgw_sgi_port = pgw_sgi_port
@@ -73,6 +77,8 @@ class PGW_Config(utils.CommandConfig):
             self.pgw_sgi_ip = pgw_config.pgw_sgi_ip
         if pgw_config.sink_ip_addr is not None:
             self.sink_ip_addr = pgw_config.sink_ip_addr
+        if pgw_config.ds_ip is not None:
+            self.ds_ip = pgw_config.ds_ip
         if pgw_config.sgw_s5_port is not None:
             self.sgw_s5_port = pgw_config.sgw_s5_port
         if pgw_config.pgw_s5_port is not None:
@@ -135,20 +141,23 @@ class PGW_Processor(P):
         nvalid = nvalid or self._pgw_config.pgw_s5_ip is None
         nvalid = nvalid or self._pgw_config.pgw_sgi_ip is None
         nvalid = nvalid or self._pgw_config.sink_ip_addr is None
+        nvalid = nvalid or self._pgw_config.ds_ip is None
 
         if nvalid:
             return P.Result.fail('IP SGW (S5), PGW (S5, SGI) and sink,'
                                  'and threads count must be provided (SGI, S5)')
 
         args = ('--s5_threads_count %s --sgi_threads_count %s '
-               '--sgw_s5_ip %s --pgw_s5_ip %s '
-               '--pgw_sgi_ip %s --sink_ip_addr %s')
+                '--sgw_s5_ip %s --pgw_s5_ip %s '
+                '--pgw_sgi_ip %s --sink_ip_addr %s '
+                '--ds_ip %s')
         args = args % (self._pgw_config.s5_threads_count,
                        self._pgw_config.sgi_threads_count,
                        self._pgw_config.sgw_s5_ip,
                        self._pgw_config.pgw_s5_ip,
                        self._pgw_config.pgw_sgi_ip,
-                       self._pgw_config.sink_ip_addr)
+                       self._pgw_config.sink_ip_addr,
+                       self._pgw_config.ds_ip)
 
         if self._pgw_config.sgw_s5_port is not None:
           args += ' --sgw_s5_port %s' % self._pgw_config.sgw_s5_port

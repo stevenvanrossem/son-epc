@@ -19,12 +19,14 @@ class HSS_Processor(unittest.TestCase):
 
         THREADS_COUNT = '10'
         IP = '10.0.0.1'
+        DS_IP = '10.0.0.2'
         PORT = '1234'
         COMMAND = 'start'
 
         config_dict = {
             'threads_count': THREADS_COUNT,
             'ip': IP,
+            'ds_ip': DS_IP,
             'port': PORT,
             'command': COMMAND,
             'garbage': {'key1': 1, 'key2': 2}
@@ -36,8 +38,8 @@ class HSS_Processor(unittest.TestCase):
         RunnerMock.assert_called_once()
         RunnerMock.start.assert_called_once()
 
-        args = '--threads_count %s --hss_ip %s --hss_port %s'
-        args = args % (THREADS_COUNT, IP, PORT)
+        args = '--threads_count %s --hss_ip %s --ds_ip %s --hss_port %s'
+        args = args % (THREADS_COUNT, IP, DS_IP, PORT)
         RunnerMock.setArguments.assert_called_once_with(args)
 
 
@@ -45,12 +47,14 @@ class HSS_MsgParser(unittest.TestCase):
     def testFullConfigWithGarbage(self):
         THREADS_COUNT = '10'
         IP = '10.0.0.1'
+        DS_IP = '10.0.0.2'
         PORT = '1234'
         COMMAND = 'start'
 
         config_dict = {
             'threads_count': THREADS_COUNT,
             'ip': IP,
+            'ds_ip': DS_IP,
             'port': PORT,
             'command': COMMAND,
             'garbage': {'key1': 1, 'key2': 2}
@@ -60,5 +64,6 @@ class HSS_MsgParser(unittest.TestCase):
 
         self.assertEqual(config.threads_count, THREADS_COUNT)
         self.assertEqual(config.ip, IP)
+        self.assertEqual(config.ds_ip, DS_IP)
         self.assertEqual(config.port, PORT)
         self.assertEqual(config.command, CommandConfig.START)

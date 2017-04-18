@@ -24,6 +24,7 @@ class MME_Processor(unittest.TestCase):
         SGW_S11_IP = '10.0.0.4'
         SGW_S5_IP = '10.0.0.5'
         PGW_S5_IP = '10.0.0.6'
+        DS_IP = '10.0.0.7'
         TRAFMON_PORT = '1001'
         MME_PORT = '1002'
         SGW_S11_PORT = '1003'
@@ -33,19 +34,20 @@ class MME_Processor(unittest.TestCase):
         COMMAND = 'start'
 
         config_dict = {
-            "threads_count": THREADS_COUNT,
-            "hss_ip": HSS_IP,
-            "hss_port": HSS_PORT,
-            "sgw_s1_ip": SGW_S1_IP,
-            "sgw_s11_ip": SGW_S11_IP,
-            "sgw_s5_ip": SGW_S5_IP,
-            "pgw_s5_ip": PGW_S5_IP,
-            "trafmon_port": TRAFMON_PORT,
-            "mme_port": MME_PORT,
-            "sgw_s11_port": SGW_S11_PORT,
-            "sgw_s1_port": SGW_S1_PORT,
-            "sgw_s5_port": SGW_S5_PORT,
-            "pgw_s5_port": PGW_S5_PORT,
+            'threads_count': THREADS_COUNT,
+            'hss_ip': HSS_IP,
+            'hss_port': HSS_PORT,
+            'sgw_s1_ip': SGW_S1_IP,
+            'sgw_s11_ip': SGW_S11_IP,
+            'sgw_s5_ip': SGW_S5_IP,
+            'pgw_s5_ip': PGW_S5_IP,
+            'ds_ip': DS_IP,
+            'trafmon_port': TRAFMON_PORT,
+            'mme_port': MME_PORT,
+            'sgw_s11_port': SGW_S11_PORT,
+            'sgw_s1_port': SGW_S1_PORT,
+            'sgw_s5_port': SGW_S5_PORT,
+            'pgw_s5_port': PGW_S5_PORT,
             'command': COMMAND,
             'garbage': {'key1': 1, 'key2': 2}
         }
@@ -57,14 +59,15 @@ class MME_Processor(unittest.TestCase):
         RunnerMock.start.assert_called_once()
 
         args = ('--threads_count %s --hss_ip %s '
-               '--sgw_s1_ip %s --sgw_s11_ip %s '
-               '--sgw_s5_ip %s --pgw_s5_ip %s '
-               '--trafmon_port %s --hss_port %s '
-               '--mme_port %s --sgw_s11_port %s --sgw_s1_port %s '
-               '--sgw_s5_port %s --pgw_s5_port %s')
+                '--sgw_s1_ip %s --sgw_s11_ip %s '
+                '--sgw_s5_ip %s --pgw_s5_ip %s '
+                '--ds_ip %s '
+                '--trafmon_port %s --hss_port %s '
+                '--mme_port %s --sgw_s11_port %s --sgw_s1_port %s '
+                '--sgw_s5_port %s --pgw_s5_port %s')
         args = args % (THREADS_COUNT, HSS_IP,
                        SGW_S1_IP, SGW_S11_IP, SGW_S5_IP,
-                       PGW_S5_IP, TRAFMON_PORT, HSS_PORT,
+                       PGW_S5_IP, DS_IP, TRAFMON_PORT, HSS_PORT,
                        MME_PORT, SGW_S11_PORT, SGW_S1_PORT,
                        SGW_S5_PORT, PGW_S5_PORT)
         RunnerMock.setArguments.assert_called_once_with(args)
@@ -79,6 +82,7 @@ class MME_MsgParser(unittest.TestCase):
         SGW_S11_IP = '10.0.0.4'
         SGW_S5_IP = '10.0.0.5'
         PGW_S5_IP = '10.0.0.6'
+        DS_IP = '10.0.0.7'
         TRAFMON_PORT = '1001'
         MME_PORT = '1002'
         SGW_S11_PORT = '1003'
@@ -88,19 +92,20 @@ class MME_MsgParser(unittest.TestCase):
         COMMAND = 'start'
 
         config_dict = {
-            "threads_count": THREADS_COUNT,
-            "hss_ip": HSS_IP,
-            "hss_port": HSS_PORT,
-            "sgw_s1_ip": SGW_S1_IP,
-            "sgw_s11_ip": SGW_S11_IP,
-            "sgw_s5_ip": SGW_S5_IP,
-            "pgw_s5_ip": PGW_S5_IP,
-            "trafmon_port": TRAFMON_PORT,
-            "mme_port": MME_PORT,
-            "sgw_s11_port": SGW_S11_PORT,
-            "sgw_s1_port": SGW_S1_PORT,
-            "sgw_s5_port": SGW_S5_PORT,
-            "pgw_s5_port": PGW_S5_PORT,
+            'threads_count': THREADS_COUNT,
+            'hss_ip': HSS_IP,
+            'hss_port': HSS_PORT,
+            'sgw_s1_ip': SGW_S1_IP,
+            'sgw_s11_ip': SGW_S11_IP,
+            'sgw_s5_ip': SGW_S5_IP,
+            'pgw_s5_ip': PGW_S5_IP,
+            'ds_ip': DS_IP,
+            'trafmon_port': TRAFMON_PORT,
+            'mme_port': MME_PORT,
+            'sgw_s11_port': SGW_S11_PORT,
+            'sgw_s1_port': SGW_S1_PORT,
+            'sgw_s5_port': SGW_S5_PORT,
+            'pgw_s5_port': PGW_S5_PORT,
             'command': COMMAND,
             'garbage': {'key1': 1, 'key2': 2}
         }
@@ -114,6 +119,7 @@ class MME_MsgParser(unittest.TestCase):
         self.assertEqual(config.sgw_s11_ip, SGW_S11_IP)
         self.assertEqual(config.sgw_s5_ip, SGW_S5_IP)
         self.assertEqual(config.pgw_s5_ip, PGW_S5_IP)
+        self.assertEqual(config.ds_ip, DS_IP)
         self.assertEqual(config.trafmon_port, TRAFMON_PORT)
         self.assertEqual(config.mme_port, MME_PORT)
         self.assertEqual(config.sgw_s11_port, SGW_S11_PORT)

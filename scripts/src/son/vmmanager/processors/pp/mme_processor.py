@@ -6,23 +6,24 @@ import logging
 
 class MME_MessageParser(object):
 
-    MSG_THREADS_COUNT = "threads_count"
-    MSG_HSS_IP = "hss_ip"
-    MSG_HSS_PORT = "hss_port"
-    MSG_SGW_S1_IP = "sgw_s1_ip"
-    MSG_SGW_S11_IP = "sgw_s11_ip"
-    MSG_SGW_S5_IP = "sgw_s5_ip"
-    MSG_PGW_S5_IP = "pgw_s5_ip"
-    MSG_TRAFMON_PORT = "trafmon_port"
-    MSG_MME_PORT = "mme_port"
-    MSG_SGW_S11_PORT = "sgw_s11_port"
-    MSG_SGW_S1_PORT = "sgw_s1_port"
-    MSG_SGW_S5_PORT = "sgw_s5_port"
-    MSG_PGW_S5_PORT = "pgw_s5_port"
+    MSG_THREADS_COUNT = 'threads_count'
+    MSG_HSS_IP = 'hss_ip'
+    MSG_HSS_PORT = 'hss_port'
+    MSG_SGW_S1_IP = 'sgw_s1_ip'
+    MSG_SGW_S11_IP = 'sgw_s11_ip'
+    MSG_SGW_S5_IP = 'sgw_s5_ip'
+    MSG_PGW_S5_IP = 'pgw_s5_ip'
+    MSG_DS_IP = 'ds_ip'
+    MSG_TRAFMON_PORT = 'trafmon_port'
+    MSG_MME_PORT = 'mme_port'
+    MSG_SGW_S11_PORT = 'sgw_s11_port'
+    MSG_SGW_S1_PORT = 'sgw_s1_port'
+    MSG_SGW_S5_PORT = 'sgw_s5_port'
+    MSG_PGW_S5_PORT = 'pgw_s5_port'
 
     MSG = [MSG_THREADS_COUNT, MSG_HSS_IP, MSG_HSS_PORT,
            MSG_SGW_S1_IP, MSG_SGW_S11_IP, MSG_SGW_S5_IP,
-           MSG_PGW_S5_IP, MSG_TRAFMON_PORT, MSG_MME_PORT,
+           MSG_PGW_S5_IP, MSG_DS_IP, MSG_TRAFMON_PORT, MSG_MME_PORT,
            MSG_SGW_S11_PORT, MSG_SGW_S1_PORT, MSG_SGW_S5_PORT,
            MSG_PGW_S5_PORT]
 
@@ -46,9 +47,10 @@ class MME_Config(utils.CommandConfig):
 
     def __init__(self, threads_count = None, hss_ip = None,
                  hss_port = None, sgw_s1_ip = None, sgw_s11_ip = None,
-                 sgw_s5_ip = None, pgw_s5_ip = None, trafmon_port = None,
-                 mme_port = None, sgw_s11_port = None, sgw_s1_port = None,
-                 sgw_s5_port = None, pgw_s5_port = None, **kwargs):
+                 sgw_s5_ip = None, pgw_s5_ip = None, ds_ip = None,
+                 trafmon_port = None, mme_port = None, sgw_s11_port = None,
+                 sgw_s1_port = None, sgw_s5_port = None, pgw_s5_port = None,
+                 **kwargs):
         self.threads_count = threads_count
         self.hss_ip = hss_ip
         self.hss_port = hss_port
@@ -56,6 +58,7 @@ class MME_Config(utils.CommandConfig):
         self.sgw_s11_ip = sgw_s11_ip
         self.sgw_s5_ip = sgw_s5_ip
         self.pgw_s5_ip = pgw_s5_ip
+        self.ds_ip = ds_ip
         self.trafmon_port = trafmon_port
         self.mme_port = mme_port
         self.sgw_s11_port = sgw_s11_port
@@ -83,6 +86,8 @@ class MME_Config(utils.CommandConfig):
             self.sgw_s5_ip = mme_config.sgw_s5_ip
         if mme_config.pgw_s5_ip is not None:
             self.pgw_s5_ip = mme_config.pgw_s5_ip
+        if mme_config.ds_ip is not None:
+            self.ds_ip = mme_config.ds_ip
         if mme_config.trafmon_port is not None:
             self.trafmon_port = mme_config.trafmon_port
         if mme_config.mme_port is not None:
@@ -148,20 +153,23 @@ class MME_Processor(P):
         nvalid = nvalid or self._mme_config.sgw_s11_ip is None
         nvalid = nvalid or self._mme_config.sgw_s5_ip is None
         nvalid = nvalid or self._mme_config.pgw_s5_ip is None
+        nvalid = nvalid or self._mme_config.ds_ip is None
 
         if nvalid:
             return P.Result.fail('IP for HSS, SGW (S1,S11,S5) and PGW (S5),'
                                  'and threads count must be provided')
 
         args = ('--threads_count %s --hss_ip %s '
-               '--sgw_s1_ip %s --sgw_s11_ip %s '
-               '--sgw_s5_ip %s --pgw_s5_ip %s')
+                '--sgw_s1_ip %s --sgw_s11_ip %s '
+                '--sgw_s5_ip %s --pgw_s5_ip %s '
+                '--ds_ip %s')
         args = args % (self._mme_config.threads_count,
                self._mme_config.hss_ip,
                self._mme_config.sgw_s1_ip,
                self._mme_config.sgw_s11_ip,
                self._mme_config.sgw_s5_ip,
-               self._mme_config.pgw_s5_ip)
+               self._mme_config.pgw_s5_ip,
+               self._mme_config.ds_ip)
 
         if self._mme_config.trafmon_port is not None:
             args += ' --trafmon_port %s' % self._mme_config.trafmon_port

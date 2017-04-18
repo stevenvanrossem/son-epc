@@ -13,7 +13,7 @@ class Client(object):
                  mme_s1_ip, spgw_s1_ip, spgw_sgi_ip,
                  pgw_s5_ip = None, sgw_s5_ip = None,
                  sink_ip = None, pgw_mgmt = None,
-                 isPp = False):
+                 ds_ip = None, isPp = False):
         self.hss_mgmt = hss_mgmt
         self.mme_mgmt = mme_mgmt
         self.spgw_mgmt = spgw_mgmt
@@ -30,6 +30,7 @@ class Client(object):
         self.sgw_s5_ip = sgw_s5_ip
         self.sink_ip = sink_ip
         self.pgw_mgmt = pgw_mgmt
+        self.ds_ip = ds_ip
         self.isPp = isPp
         self._init_configs()
 
@@ -72,6 +73,7 @@ class Client(object):
             self.hss_config = {
                 'threads_count': '2',
                 'ip': self.hss_data,
+                'ds_ip': self.ds_ip,
             }
         else:
             self.hss_config = {
@@ -90,6 +92,7 @@ class Client(object):
                 'sgw_s1_ip': self.spgw_s1_ip,
                 'sgw_s11_ip': self.spgw_data,
                 'sgw_s5_ip': self.sgw_s5_ip,
+                'ds_ip': self.ds_ip,
                 'pgw_s5_ip': self.pgw_s5_ip
             }
         else:
@@ -106,6 +109,7 @@ class Client(object):
                 'sgw_s5_ip': self.sgw_s5_ip,
                 'pgw_s5_ip': self.pgw_s5_ip,
                 'pgw_sgi_ip': self.spgw_sgi_ip,
+                'ds_ip': self.ds_ip,
                 'sink_ip_addr': self.sink_ip
             }
             self.sgw_config = {
@@ -115,6 +119,7 @@ class Client(object):
                 'sgw_s11_ip_addr': self.spgw_data,
                 'sgw_s1_ip_addr': self.spgw_s1_ip,
                 'sgw_s5_ip_addr': self.sgw_s5_ip,
+                'ds_ip': self.ds_ip,
                 'pgw_s5_ip_addr': self.pgw_s5_ip
             }
         else:
@@ -179,6 +184,8 @@ def parseScenarioSelection(argv):
                         help='IP of sink')
     parser.add_argument('--pgw_mgmt', required=False,
                         help='Management IP of PGW')
+    parser.add_argument('--ds_ip', required=False,
+                        help='IP of the common datastore')
     return parser.parse_known_args(argv)
 
 def parseGeneralArgs(argv):
@@ -220,6 +227,7 @@ def main(argv = sys.argv[1:]):
         scenarioArgs.sgw_s5_ip is not None and \
         scenarioArgs.pgw_s5_ip is not None and \
         scenarioArgs.pgw_mgmt is not None and \
+        scenarioArgs.ds_ip is not None and \
         scenarioArgs.sink_ip is not None:
         c = Client(hss_mgmt = configArgs.hss_mgmt, hss_data = configArgs.hss_data,
                 mme_mgmt = configArgs.mme_mgmt, mme_data = configArgs.mme_data,
@@ -233,12 +241,13 @@ def main(argv = sys.argv[1:]):
                 pgw_s5_ip = scenarioArgs.pgw_s5_ip,
                 sink_ip = scenarioArgs.sink_ip,
                 pgw_mgmt = scenarioArgs.pgw_mgmt,
+                ds_ip = scenarioArgs.ds_ip,
                 isPp = True)
     else:
         logger.error('--oai or --pp must be specified to select EPC implementation')
         logger.error('--pp needs the IPs of S5 interfaces,'
-                     'the IP of the PGW\'s mgmt and the IP of sink'
-                     '(--sgw_s5_ip, --pgw_s5_ip, --pgw_mgmt and --sink_ip)')
+                     'the IP of the PGW\'s mgmt and the IP of sink and the IP of the datastore '
+                     '(--sgw_s5_ip, --pgw_s5_ip, --pgw_mgmt and --sink_ip --ds_ip)')
         return
 
 

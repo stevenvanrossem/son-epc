@@ -9,6 +9,7 @@ class HSS_MessageParser(object):
     MSG_THREADS_COUNT = 'threads_count'
     MSG_IP = 'ip'
     MSG_PORT = 'port'
+    MSG_DS_IP = 'ds_ip'
 
     def __init__(self, json_dict):
         self.logger = logging.getLogger(HSS_MessageParser.__name__)
@@ -19,20 +20,23 @@ class HSS_MessageParser(object):
         tc = self.msg_dict.get(self.MSG_THREADS_COUNT, None)
         ip = self.msg_dict.get(self.MSG_IP, None)
         port = self.msg_dict.get(self.MSG_PORT, None)
-        self.logger.info('Got arguments: ip=%s; port=%s; thread counts=%s',
-                         ip, port, tc)
+        ds_ip = self.msg_dict.get(self.MSG_DS_IP, None)
+        self.logger.info('Got arguments: ip=%s; port=%s; thread counts=%s; ds_ip=%s',
+                         ip, port, tc, ds_ip)
 
-        hc = HSS_Config(tc, ip , port)
+        hc = HSS_Config(tc, ip , port, ds_ip)
         self.command_parser.parse(hc)
         return hc
 
 
 class HSS_Config(utils.CommandConfig):
 
-    def __init__(self, threads_count = None, ip = None, port = None, **kwargs):
+    def __init__(self, threads_count = None, ip = None, port = None,
+                 ds_ip = None, **kwargs):
         self.threads_count = threads_count
         self.ip = ip
         self.port = port
+        self.ds_ip = ds_ip
         super(self.__class__, self).__init__(**kwargs)
 
     def update(self, hss_config):
@@ -45,6 +49,8 @@ class HSS_Config(utils.CommandConfig):
             self.port = hss_config.port
         if hss_config.threads_count is not None:
             self.threads_count = hss_config.threads_count
+        if hss_config.ds_ip is not None:
+            self.ds_ip = hss_config.ds_ip
 
 
 class HSS_Processor(P):
@@ -93,18 +99,19 @@ class HSS_Processor(P):
 
     def _setArguments(self):
         if self._hss_config.ip is None or \
-                self._hss_config.threads_count is None:
-            return P.Result.fail('IP and thread count must be provided')
+                self._hss_config.threads_count is None or \
+                self._hss_config.ds_ip is None:
+            return P.Result.fail('IP (HSS and DS) and thread count must be provided')
 
+        args = ('--threads_count %s '
+                '--hss_ip %s '
+                '--ds_ip %s')
+        args = args % (self._hss_config.threads_count,
+                       self._hss_config.ip,
+                       self._hss_config.ds_ip)
         if  self._hss_config.port is not None:
-            self._runner.setArguments("--threads_count %s "
-                                    "--hss_ip %s --hss_port %s" % (
-                                        self._hss_config.threads_count,
-                                        self._hss_config.ip,
-                                        self._hss_config.port))
-        else:
-            self._runner.setArguments("--threads_count %s --hss_ip %s " % (
-                                        self._hss_config.threads_count,
-                                        self._hss_config.ip))
+            args += ' --hss_port %s' % self._hss_config.port
+
+        self._runner.setArguments(args)
 
         return P.Result.ok('Arguments are set')
