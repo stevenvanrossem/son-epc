@@ -1,2 +1,2 @@
 [processors]
-pgw=son.vmmanager.processors.pp.pgw_processor.pgw_Processor
+pgw=son.vmmanager.processors.pp.pgw_processor.PGW_Processor
