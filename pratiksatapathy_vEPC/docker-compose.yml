@@ -1,0 +1,42 @@
+version: '3'
+
+networks:
+  sonepc_default:
+    external: true
+
+services:
+  mme_pp:
+    build:
+      context: .
+      dockerfile: Dockerfile.mme
+    image: mme_pp:SNAPSHOT
+    container_name: mme_pp
+    networks:
+      - sonepc_default
+
+  hss_pp:
+    build:
+      context: .
+      dockerfile: Dockerfile.hss
+    image: hss_pp:SNAPSHOT
+    container_name: hss_pp
+    networks:
+      - sonepc_default
+
+  pgw_pp:
+    build:
+      context: .
+      dockerfile: Dockerfile.pgw
+    image: pgw_pp:SNAPSHOT
+    container_name: pgw_pp
+    networks:
+      - sonepc_default
+
+  sgw_pp:
+    build:
+      context: .
+      dockerfile: Dockerfile.sgw
+    image: sgw_pp:SNAPSHOT
+    container_name: sgw_pp
+    networks:
+      - sonepc_default
