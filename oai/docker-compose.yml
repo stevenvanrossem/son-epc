@@ -1,5 +1,9 @@
 version: '3'
 
+networks:
+  sonepc_default:
+    external: true
+
 services:
   mme:
     build:
@@ -8,6 +12,8 @@ services:
     image: mme:SNAPSHOT
     container_name: mme
     command: /root/son-vm/start.sh
+    networks:
+      - sonepc_default
 
   hss:
     build:
@@ -16,6 +22,8 @@ services:
     image: hss:SNAPSHOT
     container_name: hss
     command: /root/son-vm/start.sh
+    networks:
+      - sonepc_default
 
   spgw:
     build:
@@ -28,3 +36,5 @@ services:
       - NET_RAW
       - SYS_MODULE
     command: /root/son-vm/start.sh
+    networks:
+      - sonepc_default
