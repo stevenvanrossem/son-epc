@@ -298,8 +298,7 @@ class Runner(object):
 
         self.logger.debug("Starting task %s with arguments %s",
                           self._executable, self._arguments)
-        cmd = '%s %s' % (self._executable, self._arguments)
-        self._task = subprocess.Popen(cmd,
+        self._task = subprocess.Popen([self._executable] + self._arguments.split(' '),
                                       stdin = subprocess.PIPE,
                                       stdout = subprocess.PIPE,
                                       stderr = subprocess.PIPE,

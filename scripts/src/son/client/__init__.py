@@ -38,7 +38,7 @@ class Client(object):
             self.factory = ClientFactory([
                 (self.hss_mgmt, self.hss_config),
                 (self.mme_mgmt, self.mme_config),
-                (self.spgw_mgmt, self.sgw_config)
+                (self.spgw_mgmt, self.sgw_config),
                 (self.pgw_mgmt, self.pgw_config)
             ], isStopping = isStopping)
         else:
@@ -63,6 +63,9 @@ class Client(object):
                 'ip': self.spgw_data
             }
         }
+        self._init_hss_config()
+        self._init_mme_config()
+        self._init_spgw_config()
 
     def _init_hss_config(self):
         if self.isPp:
@@ -230,7 +233,7 @@ def main(argv = sys.argv[1:]):
                 pgw_s5_ip = scenarioArgs.pgw_s5_ip,
                 sink_ip = scenarioArgs.sink_ip,
                 pgw_mgmt = scenarioArgs.pgw_mgmt,
-                pp = True)
+                isPp = True)
     else:
         logger.error('--oai or --pp must be specified to select EPC implementation')
         logger.error('--pp needs the IPs of S5 interfaces,'

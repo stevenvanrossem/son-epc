@@ -103,7 +103,7 @@ class HSS_Processor(P):
                                         self._hss_config.ip,
                                         self._hss_config.port))
         else:
-            self.runner.setArguments("--threads_count %s --hss_ip %s " % (
+            self._runner.setArguments("--threads_count %s --hss_ip %s " % (
                                         self._hss_config.threads_count,
                                         self._hss_config.ip))
 
