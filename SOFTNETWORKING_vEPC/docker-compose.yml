@@ -1,0 +1,42 @@
+version: '3'
+
+services:
+  epc_base:
+    build:
+      context: .
+      dockerfile: Dockerfile.base
+    image: epc_base:SNAPSHOT
+
+  mme_pp:
+    build:
+      context: .
+      dockerfile: Dockerfile.mme
+    image: mme_pp:SNAPSHOT
+    container_name: mme_pp
+    depends_on:
+      - epc_base
+
+  hss_pp:
+    build:
+      context: .
+      dockerfile: Dockerfile.hss
+    image: hss_pp:SNAPSHOT
+    container_name: hss_pp
+
+  pgw_pp:
+    build:
+      context: .
+      dockerfile: Dockerfile.pgw
+    image: pgw_pp:SNAPSHOT
+    container_name: pgw_pp
+    depends_on:
+      - epc_base
+
+  sgw_pp:
+    build:
+      context: .
+      dockerfile: Dockerfile.sgw
+    image: sgw_pp:SNAPSHOT
+    container_name: sgw_pp
+    depends_on:
+      - epc_base

@@ -1,0 +1,30 @@
+FROM ubuntu:14.04
+
+RUN	apt-get update && apt-get install -y \
+	net-tools \
+	iproute \
+	iputils-ping
+
+#RUN apt-get update
+RUN apt-get install -y git sudo wget software-properties-common make python3 libpython3-dev
+
+WORKDIR /root
+RUN wget https://bootstrap.pypa.io/get-pip.py
+RUN python3 get-pip.py
+
+WORKDIR /root
+#RUN git clone https://github.com/elekjani/son-epc.git
+COPY son_epc_scripts son-epc/scripts/
+COPY configs son-epc/configs/
+WORKDIR son-epc/scripts
+RUN python3 setup.py install
+
+WORKDIR /root
+#RUN git clone https://github.com/elekjani/NFV_LTE_EPC.git
+COPY NFV_LTE_EPC-1.1 NFV_LTE_EPC/NFV_LTE_EPC-1.1/
+WORKDIR /root/NFV_LTE_EPC/NFV_LTE_EPC-1.1/scripts
+RUN bash install.sh
+WORKDIR /root/NFV_LTE_EPC/NFV_LTE_EPC-1.1/src
+RUN make
+
+CMD /bin/bash

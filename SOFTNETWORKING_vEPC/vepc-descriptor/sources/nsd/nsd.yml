@@ -1,0 +1,135 @@
+
+---
+descriptor_version: "1.0"
+
+vendor: "eu.sonata-nfv"
+name: "sonata-vepc-service"
+version: "0.1"
+author: "Steven Van Rossem, Janos Elek, Thomas Soenen"
+description: "vEPC service based on https://github.com/networkedsystemsIITB/NFV_LTE_EPC"
+
+##
+## The various network functions this service
+## is composed of.
+##
+network_functions:
+  - vnf_id: "mme1"
+    vnf_vendor: "eu.sonata-nfv"
+    vnf_name: "mme"
+    vnf_version: "0.1"
+  - vnf_id: "hss1"
+    vnf_vendor: "eu.sonata-nfv"
+    vnf_name: "hss"
+    vnf_version: "0.1"
+  - vnf_id: "sgw1"
+    vnf_vendor: "eu.sonata-nfv"
+    vnf_name: "sgw"
+    vnf_version: "0.1"
+  - vnf_id: "pgw1"
+    vnf_vendor: "eu.sonata-nfv"
+    vnf_name: "pgw"
+    vnf_version: "0.1"
+
+##
+## The NS connection points to the 
+## outside world.
+##
+connection_points:
+  - id: "S1-MME"
+    interface: "ipv4"
+    type: "external"
+  - id: "S1-U"
+    interface: "ipv4"
+    type: "external"
+  - id: "SGi"
+    interface: "ipv4"
+    type: "internal"
+  - id: "mgmt"
+    interface: "ipv4"
+    type: "management"
+
+##
+## The virtual links that interconnect
+## the different connections points.
+##
+virtual_links:
+  - id: "mgmt"
+    connectivity_type: "E-LAN"
+    connection_points_reference:
+      - "mme1:mgmt"
+      - "hss1:mgmt"
+      - "sgw1:mgmt"
+      - "pgw1:mgmt"
+      - "mgmt"
+  - id: "S11-S6a-LAN"
+    connectivity_type: "E-LAN"
+    connection_points_reference:
+      - "hss1:S6a"
+      - "mme1:S11-S6a"
+      - "sgw1:S11"
+  - id: "S1-MME-a"
+    connectivity_type: "E-Line"
+    connection_points_reference:
+      - "S1-MME"
+      - "mme1:S1-MME"
+  - id: "S1-MME-b"
+    connectivity_type: "E-Line"
+    connection_points_reference:
+      - "mme1:S1-MME"
+      - "S1-MME"
+  - id: "S1-U-a"
+    connectivity_type: "E-Line"
+    connection_points_reference:
+      - "S1-U"
+      - "sgw1:S1-U"
+  - id: "S1-U-b"
+    connectivity_type: "E-Line"
+    connection_points_reference:
+      - "sgw1:S1-U"
+      - "S1-U"
+  - id: "S5-a"
+    connectivity_type: "E-Line"
+    connection_points_reference:
+      - "sgw1:S5"
+      - "pgw1:S5"
+  - id: "S5-b"
+    connectivity_type: "E-Line"
+    connection_points_reference:
+      - "pgw1:S5"
+      - "sgw1:S5"
+  - id: "SGi-a"
+    connectivity_type: "E-Line"
+    connection_points_reference:
+      - "SGi"
+      - "pgw1:SGi"
+  - id: "SGI-b"
+    connectivity_type: "E-Line"
+    connection_points_reference:
+      - "pgw1:SGi"
+      - "SGi"
+
+##
+## The forwarding graphs.
+##
+forwarding_graphs:
+  - fg_id: "ns:fg01"
+    number_of_endpoints: 3
+    number_of_virtual_links: 7
+    constituent_virtual_links: 
+      - "mgmt"
+      - "ctrl-lan-back"
+      - "S11-S6a-LAN"
+      - "S1-MME-a"
+      - "S1-MME-b"
+      - "S1-U-a"
+      - "S1-U-b"
+      - "S5-a"
+      - "S5-b"
+      - "SGi-a"
+      - "SGi-b"
+    constituent_vnfs:
+      - "mme1"
+      - "hss1"
+      - "sgw1"
+      - "pgw1"
+

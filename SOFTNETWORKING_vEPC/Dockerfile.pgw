@@ -1,0 +1,3 @@
+FROM epc_base:SNAPSHOT
+
+ENV SON_EMU_CMD "son-vm-server -v -c /root/son-epc/configs/server.conf.pgw"

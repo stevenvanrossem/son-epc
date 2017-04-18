@@ -1,0 +1,4 @@
+[console_scripts]
+son-vm-client = son.client:main
+son-vm-server = son.vmmanager:main
+

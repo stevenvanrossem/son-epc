@@ -1,0 +1,13 @@
+FROM epc_base:SNAPSHOT
+
+
+# also run the DS in this VNF
+
+WORKDIR /root
+COPY start_vm_server_and_ds.sh ./start_vm_server_and_ds.sh
+RUN chmod a+x start_vm_server_and_ds.sh
+
+#CMD son-vm-server -v -c /root/son-epc/pratiksatapathy_vEPC/server.conf.hss
+ENV SON_EMU_CMD "./start_vm_server_and_ds.sh"
+
+CMD /bin/bash

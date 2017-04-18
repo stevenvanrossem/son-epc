@@ -1,0 +1,75 @@
+
+---
+##
+## Some general information regarding this
+## VNF descriptor.
+##
+descriptor_version: "vnfd-schema-01"
+vendor: "eu.sonata-nfv"
+name: "mme"
+version: "0.1"
+author: "Steven Van Rossem, Janos Elek, Thomas Soenen"
+description: "MME VNF of vEPC"
+##
+## The virtual deployment unit.
+##
+virtual_deployment_units:
+  - id: "1"
+    vm_image: "mme:v3"
+    vm_image_format: "docker"
+    resource_requirements:
+      cpu:
+        vcpus: 1
+      memory:
+        size: 1
+        size_unit: "GB"
+      storage:
+        size: 1
+        size_unit: "GB"
+    connection_points:
+      - id: "vdu01:cp01"
+        interface: "ipv4"
+        type: "external"
+      - id: "vdu01:cp02"
+        interface: "ipv4"
+        type: "external"
+      - id: "vdu01:cp03"
+        interface: "ipv4"
+        type: "management"
+
+##
+## The virtual links that interconnect
+## the different connections points.
+##
+virtual_links:
+  - id: "S1-MME"
+    connectivity_type: "E-Line"
+    connection_points_reference:
+      - "vdu01:cp01"
+      - "S1-MME"
+  - id: "S11-S6a"
+    connectivity_type: "E-LAN"
+    connection_points_reference:
+      - "vdu01:cp01"
+      - "S11-S6a"
+  - id: "mgmt"
+    connectivity_type: "E-LAN"
+    connection_points_reference:
+      - "vdu01:cp02"
+      - "mgmt"
+
+##
+## The VNF connection points to the 
+## outside world.
+##
+connection_points:
+  - id: "S1-MME"
+    interface: "ipv4"
+    type: "external"
+  - id: "S11-S6a"
+    interface: "ipv4"
+    type: "external"
+  - id: "mgmt"
+    interface: "ipv4"
+    type: "management"
+

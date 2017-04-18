@@ -1,0 +1,6 @@
+FROM epc_base:SNAPSHOT
+
+#CMD son-vm-server -v -c /root/son-epc/pratiksatapathy_vEPC/server.conf.mme
+ENV SON_EMU_CMD "son-vm-server -v -c /root/son-epc/configs/server.conf.mme"
+
+CMD /bin/bash
