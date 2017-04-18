@@ -8,6 +8,8 @@ WORKDIR /root
 RUN git clone https://github.com/elekjani/NFV_LTE_EPC.git
 WORKDIR /root/NFV_LTE_EPC/NFV_LTE_EPC-1.1/scripts
 RUN bash install.sh
+WORKDIR /root/NFV_LTE_EPC/NFV_LTE_EPC-1.1/scripts/setup_ds
+RUN bash install_server.sh
 WORKDIR /root/NFV_LTE_EPC/NFV_LTE_EPC-1.1/src
 RUN make
 
@@ -17,7 +19,8 @@ RUN python3 get-pip.py
 
 WORKDIR /root
 RUN git clone https://github.com/elekjani/son-epc.git
-WORKDIR son-epc/scripts
+WORKDIR /root/son-epc/scripts
 RUN python3 setup.py install
 
-CMD son-vm-server -v -c /root/son-epc/pratiksatapathy_vEPC/server.conf.hss
+WORKDIR /root/son-epc/pratiksatapathy_vEPC
+CMD bash ./start_vm_server_and_ds.sh
