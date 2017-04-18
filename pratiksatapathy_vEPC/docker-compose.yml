@@ -5,6 +5,12 @@ networks:
     external: true
 
 services:
+  epc_base:
+    build:
+      context: .
+      dockerfile: Dockerfile.base
+    image: epc_base:SNAPSHOT
+
   mme_pp:
     build:
       context: .
@@ -13,6 +19,8 @@ services:
     container_name: mme_pp
     networks:
       - sonepc_default
+    depends_on:
+      - epc_base
 
   hss_pp:
     build:
@@ -31,6 +39,8 @@ services:
     container_name: pgw_pp
     networks:
       - sonepc_default
+    depends_on:
+      - epc_base
 
   sgw_pp:
     build:
@@ -40,3 +50,5 @@ services:
     container_name: sgw_pp
     networks:
       - sonepc_default
+    depends_on:
+      - epc_base
