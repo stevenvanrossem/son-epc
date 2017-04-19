@@ -1,5 +1,6 @@
 FROM epc_base:SNAPSHOT
 
 RUN chmod u+x /root/NFV_LTE_EPC/NFV_LTE_EPC-1.1/scripts/setup_ds/run_server.sh
+RUN chmod u+x /root/NFV_LTE_EPC/NFV_LTE_EPC-1.1/scripts/setup_hss/load_data.sh
 WORKDIR /root/son-epc/pratiksatapathy_vEPC
 CMD bash ./start_vm_server_and_ds.sh
