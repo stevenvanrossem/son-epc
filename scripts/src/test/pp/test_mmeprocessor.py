@@ -21,6 +21,7 @@ PGW_S5_IP = '10.0.0.6'
 DS_IP = '10.0.0.7'
 MME_S1_IP = '10.0.0.7'
 MME_S11_IP = '10.0.0.8'
+TRAFMON_IP = '10.0.0.9'
 DS_PORT = '1234'
 TRAFMON_PORT = '1001'
 MME_PORT = '1002'
@@ -42,6 +43,7 @@ config_dict = {
     'mme_s1_ip': MME_S1_IP,
     'mme_s11_ip': MME_S11_IP,
     'ds_port': DS_PORT,
+    'trafmon_ip': TRAFMON_IP,
     'trafmon_port': TRAFMON_PORT,
     'mme_port': MME_PORT,
     'sgw_s11_port': SGW_S11_PORT,
@@ -67,7 +69,8 @@ class MME_Processor(unittest.TestCase):
         args = ('--threads_count %s --hss_ip %s '
                 '--sgw_s1_ip %s --sgw_s11_ip %s '
                 '--sgw_s5_ip %s --pgw_s5_ip %s '
-                '--ds_ip %s --mme_s1_ip %s --mme_s11_ip %s --ds_port %s '
+                '--ds_ip %s --mme_s1_ip %s --mme_s11_ip %s '
+                '--trafmon_ip %s --ds_port %s '
                 '--trafmon_port %s --hss_port %s '
                 '--mme_port %s --sgw_s11_port %s --sgw_s1_port %s '
                 '--sgw_s5_port %s --pgw_s5_port %s')
@@ -75,6 +78,7 @@ class MME_Processor(unittest.TestCase):
                        SGW_S1_IP, SGW_S11_IP,
                        SGW_S5_IP, PGW_S5_IP,
                        DS_IP, MME_S1_IP, MME_S11_IP,
+                       TRAFMON_IP,
                        DS_PORT, TRAFMON_PORT,
                        HSS_PORT, MME_PORT, SGW_S11_PORT,
                        SGW_S1_PORT, SGW_S5_PORT, PGW_S5_PORT)
@@ -98,6 +102,7 @@ class MME_MsgParser(unittest.TestCase):
         self.assertEqual(config.mme_s1_ip, MME_S1_IP)
         self.assertEqual(config.mme_s11_ip, MME_S11_IP)
         self.assertEqual(config.ds_port, DS_PORT)
+        self.assertEqual(config.trafmon_ip, TRAFMON_IP)
         self.assertEqual(config.trafmon_port, TRAFMON_PORT)
         self.assertEqual(config.mme_port, MME_PORT)
         self.assertEqual(config.sgw_s11_port, SGW_S11_PORT)
