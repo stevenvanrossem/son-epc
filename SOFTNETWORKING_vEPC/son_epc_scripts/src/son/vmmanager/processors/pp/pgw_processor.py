@@ -96,7 +96,7 @@ class PGW_Processor(P):
     def __init__(self):
         self.logger = logging.getLogger(PGW_Processor.__name__)
 
-        self._log_dir = tempfile.TemporaryDirectory(prefix='mme.processor')
+        self._log_dir = tempfile.TemporaryDirectory(prefix='pgw.processor')
         self._log_dir_name = self._log_dir.name
         self._runner = utils.Runner(self.PGW_EXECUTABLE,
                                     log_dir=self._log_dir_name)
