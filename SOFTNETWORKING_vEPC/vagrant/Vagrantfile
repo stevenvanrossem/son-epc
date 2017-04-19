@@ -35,6 +35,7 @@
 # configures the configuration version (we support older styles for
 # backwards compatibility). Please don't change it unless you know what
 # you're doing.
+
 Vagrant.configure(2) do |config|
   # The most common configuration options are documented and commented below.
   # For a complete reference, please see the online documentation at
@@ -54,6 +55,7 @@ Vagrant.configure(2) do |config|
   #config.ssh.username = "vagrant"
   #config.ssh.password = "vagrant"
   #config.ssh.insert_key = "false"
+  config.ssh.forward_x11 = true
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -69,11 +71,13 @@ Vagrant.configure(2) do |config|
   config.vm.network "forwarded_port", guest: 9090, host: 9090 # Prometheus
   config.vm.network "forwarded_port", guest: 9091, host: 9091 # Prometheus push gateway
   config.vm.network "forwarded_port", guest: 3000, host: 3000 # Grafana
+  config.vm.network "forwarded_port", guest: 80, host: 81 # Editor
 
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
   # config.vm.network "private_network", ip: "192.168.33.10"
+
 
   # Create a public network, which generally matched to bridged network.
   # Bridged networks make the machine appear as another physical device on
@@ -113,13 +117,28 @@ Vagrant.configure(2) do |config|
   #   push.app = "YOUR_ATLAS_USERNAME/YOUR_APPLICATION_NAME"
   # end
 
+  # provision files from host, for later use during install
   config.vm.provision "file", source: "./motd_demo_sdk", destination: "/tmp/motd"
-  config.vm.provision "file", source: "./config.yml", destination: "/tmp/config.yml"
- 
+  config.vm.provision "file", source: "./config.yaml", destination: "/tmp/config.yaml"
+
+  # change default password of the VM
+  config.vm.provision "password", type: "shell", inline: <<-SHELL 
+     apt-get install -y expect
+     echo '#!/usr/bin/expect
+      set timeout 20
+      spawn sudo passwd ubuntu
+      expect "Enter new UNIX password:" {send "ubuntu\\r"}
+      expect "Retype new UNIX password:" {send "ubuntu\\r"}
+      interact' > change_ubuntu_password
+    chmod +x change_ubuntu_password
+    ./change_ubuntu_password
+  SHELL
+
+
   # Enable provisioning with a shell script. Additional provisioners such as
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
-  config.vm.provision "shell", inline: <<-SHELL
+  config.vm.provision "son-emu", type: "shell", inline: <<-SHELL
 
      # add users to docker groupt to avoid sudo typing
      #sudo gpasswd -a vagrant docker
@@ -153,9 +172,12 @@ Vagrant.configure(2) do |config|
      echo "Running son-emu unit tests to validate installation"
      cd /home/ubuntu/son-emu
      sudo python setup.py develop
-     sudo py.test -v src/emuvim/test/unittests
+     #sudo py.test -v src/emuvim/test/unittests
+     
+     SHELL
 
 
+   config.vm.provision "son-cli", type: "shell", inline: <<-SHELL
 
      # install son-cli
      echo "Installing son-cli (will take some time) ..."
@@ -171,11 +193,29 @@ Vagrant.configure(2) do |config|
      sudo pip3 install scipy
      sudo pip3 install docker==2.0.2
      cd /home/ubuntu
-     git clone clone https://github.com/sonata-nfv/son-cli.git
+     git clone https://github.com/sonata-nfv/son-cli.git
      cd /home/ubuntu/son-cli
      python3 setup.py develop  
 
+     SHELL
 
+
+  config.vm.provision "son-editor", type: "shell", inline: <<-SHELL
+     # install editor
+     git clone https://github.com/sonata-nfv/son-editor-backend
+     cd son-editor-backend/build-docker/ 
+     # copy the correct config file for son-editor
+     # github user: sonatademo
+     # github pass: s0natademo
+     # github ClientID : fd2e6190d732fa3401b3
+     # github ClientSecret : 104310705006d191f45771fdc721406cfe52d6c9
+     sudo cp /tmp/config.yaml ./
+     sudo docker-compose up -d 
+     SHELL
+
+
+
+  config.vm.provision "examples", type: "shell", inline: <<-SHELL
 
      # place motd
      #cd /home/ubuntu/son-emu
@@ -199,7 +239,8 @@ Vagrant.configure(2) do |config|
      docker build -t skewmon .
      
      # getting vEPC related stuff
-     #cd /home/ubuntu
+     cd /home/ubuntu
+     #git clone https://github.com/elekjani/son-epc.git
      #git clone https://github.com/elekjani/son-epc.git
      #copy docker save images to VM
      #docker load < hss_v4_img.gz
@@ -208,17 +249,7 @@ Vagrant.configure(2) do |config|
      #docker build -t hss:SNAPSHOT -f Dockerfile.hss .
      #docker build -t mme:SNAPSHOT -f Dockerfile.mme .
      #docker build -t spgw:SNAPSHOT -f Dockerfile.spgw .
+   
 
-     # install editor
-     git clone https://github.com/sonata-nfv/son-editor-backend
-     cd son-editor-backend/build-docker/ 
-     # github user: sonatademo
-     # github pass: s0natademo
-     # github ClientID : fd2e6190d732fa3401b3
-     # github ClientSecret : 104310705006d191f45771fdc721406cfe52d6c9
-     
-     
-
-  SHELL
-
+    SHELL
 end
