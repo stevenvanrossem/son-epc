@@ -3,12 +3,14 @@
 
 #define THREADS_COUNT "threads_count"
 #define HSS_IP "hss_ip"
+#define MME_IP "mme_ip"
 #define HSS_PORT "hss_port"
 #define SGW_S1_IP "sgw_s1_ip"
 #define SGW_S11_IP "sgw_s11_ip"
 #define SGW_S5_IP "sgw_s5_ip"
 #define PGW_S5_IP "pgw_s5_ip"
 #define DS_IP "ds_ip"
+#define DS_PORT "ds_port"
 
 #define TRAFMON_PORT "trafmon_port"
 #define MME_PORT "mme_port"
@@ -121,12 +123,14 @@ void readConfig(int ac, char *av[]) {
   desc.add_options()
     (THREADS_COUNT, po::value<int>(), "Number of threads")
     (HSS_IP, po::value<string>(), "IP addres of the HSS")
+    (MME_IP, po::value<string>(), "IP addres of the MME")
     (HSS_PORT, po::value<int>()->default_value(g_hss_port), "Port of the HSS")
     (SGW_S1_IP, po::value<string>(), "IP address of SGW's S1 interface")
     (SGW_S11_IP, po::value<string>(), "IP address of SGW's S11 interface")
     (SGW_S5_IP, po::value<string>(), "IP address of SGW's S5 interface")
     (PGW_S5_IP, po::value<string>(), "IP address of PGW's S5 interface")
     (DS_IP, po::value<string>(), "IP address of datastore")
+    (DS_PORT, po::value<int>()->default_value(8090), "Port of the datasoter")
 
     (TRAFMON_PORT, po::value<int>()->default_value(g_trafmon_port), "Port of the traffic monitor")
     (MME_PORT, po::value<int>()->default_value(g_mme_port), "Port of the MME")
@@ -142,6 +146,7 @@ void readConfig(int ac, char *av[]) {
 
   if (vm.count(THREADS_COUNT) ||
       vm.count(HSS_IP) ||
+      vm.count(MME_IP) ||
       vm.count(SGW_S1_IP) ||
       vm.count(SGW_S11_IP) ||
       vm.count(SGW_S5_IP) ||
@@ -152,13 +157,16 @@ void readConfig(int ac, char *av[]) {
 
   g_workers_count = vm[THREADS_COUNT].as<int>();
   g_hss_ip_addr =  vm[HSS_IP].as<string>();
+  g_mme_ip_addr =  vm[MME_IP].as<string>();
   g_hss_port = vm[HSS_PORT].as<int>();
 
   g_sgw_s11_ip_addr = vm[SGW_S1_IP].as<string>();
   g_sgw_s1_ip_addr = vm[SGW_S5_IP].as<string>();
   g_sgw_s5_ip_addr = vm[SGW_S11_IP].as<string>();
   g_pgw_s5_ip_addr = vm[PGW_S5_IP].as<string>();
-  dsmme_path = vm[DS_IP].as<string>();
+  std::stringstream sstm;
+  sstm << vm[DS_IP].as<string>() << ':' << vm[DS_PORT].as<int>();
+  dsmme_path = sstm.str();
 
   g_trafmon_port = vm[TRAFMON_PORT].as<int>();
   g_mme_port = vm[MME_PORT].as<int>();

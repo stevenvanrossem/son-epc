@@ -9,6 +9,7 @@
 #define PGW_SGI_IP "pgw_sgi_ip"
 #define SINK_IP_ADDR "sink_ip_addr"
 #define DS_IP "ds_ip"
+#define DS_PORT "ds_port"
 
 #define SGW_S5_PORT "sgw_s5_port"
 #define PGW_S5_PORT "pgw_s5_port"
@@ -43,7 +44,7 @@ void run() {
 	/* downlink clients */
 	sgw_s5_clients.resize(g_s5_server_threads_count);
 	for (i = 0; i < g_sgi_server_threads_count; i++) {
-		sgw_s5_clients[i].conn(PGW,SGWLB,7200);
+		sgw_s5_clients[i].conn(g_pgw_s5_ip_addr,g_sgw_s5_ip_addr,g_sgw_s5_port);
 	}
 	/* PGW S5 server */
 	TRACE(cout << "PGW S5 server started" << endl;)
@@ -142,6 +143,7 @@ void readConfig(int ac, char *av[]) {
     (PGW_SGI_IP, po::value<string>(), "IP address of PGW's SGI interface")
     (SINK_IP_ADDR, po::value<string>(), "IP address of the sink")
     (DS_IP, po::value<string>(), "IP address of the datastore")
+    (DS_PORT, po::value<int>()->default_value(8090), "Port of the datastore")
 
     (SGW_S5_PORT, po::value<int>()->default_value(g_sgw_s5_port), "Port of the SGW's S5 interface")
     (PGW_S5_PORT, po::value<int>()->default_value(g_pgw_s5_port), "Port of the PGW's S5 interface")
@@ -171,7 +173,9 @@ void readConfig(int ac, char *av[]) {
   g_pgw_s5_ip_addr = vm[PGW_S5_IP].as<string>();
   g_pgw_sgi_ip_addr = vm[PGW_SGI_IP].as<string>();
   g_sink_ip_addr = vm[SINK_IP_ADDR].as<string>();
-  dspgw_path = vm[DS_IP].as<string>();
+  std::stringstream sstm;
+  sstm << vm[DS_IP].as<string>() << ':' << vm[DS_PORT].as<int>();
+  dspgw_path = sstm.str();
 
   g_sgw_s5_port = vm[SGW_S5_PORT].as<int>();
   g_pgw_s5_port = vm[PGW_S5_PORT].as<int>();

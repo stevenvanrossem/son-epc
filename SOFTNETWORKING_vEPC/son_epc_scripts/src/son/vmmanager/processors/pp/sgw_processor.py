@@ -14,6 +14,7 @@ class SGW_MessageParser(object):
     MSG_SGW_S5_IP_ADDR = 'sgw_s5_ip_addr'
     MSG_PGW_S5_IP_ADDR = 'pgw_s5_ip_addr'
     MSG_DS_IP = 'ds_ip'
+    MSG_DS_PORT = 'ds_port'
     MSG_SGW_S11_PORT = 'sgw_s11_port'
     MSG_SGW_S1_PORT = 'sgw_s1_port'
     MSG_SGW_S5_PORT = 'sgw_s5_port'
@@ -22,8 +23,8 @@ class SGW_MessageParser(object):
     MSG = [MSG_S11_THREADS_COUNT, MSG_S1_THREADS_COUNT,
            MSG_S5_THREADS_COUNT, MSG_SGW_S11_IP_ADDR,
            MSG_SGW_S1_IP_ADDR, MSG_SGW_S5_IP_ADDR, MSG_PGW_S5_IP_ADDR,
-           MSG_DS_IP, MSG_SGW_S11_PORT, MSG_SGW_S1_PORT, MSG_SGW_S5_PORT,
-           MSG_PGW_S5_PORT]
+           MSG_DS_IP, MSG_DS_PORT, MSG_SGW_S11_PORT, MSG_SGW_S1_PORT,
+           MSG_SGW_S5_PORT, MSG_PGW_S5_PORT]
 
     def __init__(self, json_dict):
         self.logger = logging.getLogger(SGW_MessageParser.__name__)
@@ -45,9 +46,9 @@ class SGW_Config(utils.CommandConfig):
     def __init__(self, s11_threads_count = None, s1_threads_count = None,
                  s5_threads_count = None, sgw_s11_ip_addr = None,
                  sgw_s1_ip_addr = None, sgw_s5_ip_addr = None,
-                 pgw_s5_ip_addr = None, ds_ip = None, sgw_s11_port = None,
-                 sgw_s1_port = None, sgw_s5_port = None, pgw_s5_port = None,
-                 **kwargs):
+                 pgw_s5_ip_addr = None, ds_ip = None, ds_port = None,
+                 sgw_s11_port = None, sgw_s1_port = None, sgw_s5_port = None,
+                 pgw_s5_port = None, **kwargs):
         self.s11_threads_count = s11_threads_count
         self.s1_threads_count = s1_threads_count
         self.s5_threads_count = s5_threads_count
@@ -56,6 +57,7 @@ class SGW_Config(utils.CommandConfig):
         self.sgw_s5_ip_addr = sgw_s5_ip_addr
         self.pgw_s5_ip_addr = pgw_s5_ip_addr
         self.ds_ip = ds_ip
+        self.ds_port = ds_port
         self.sgw_s11_port = sgw_s11_port
         self.sgw_s1_port = sgw_s1_port
         self.sgw_s5_port = sgw_s5_port
@@ -83,6 +85,8 @@ class SGW_Config(utils.CommandConfig):
           self.pgw_s5_ip_addr = sgw_config.pgw_s5_ip_addr
         if sgw_config.ds_ip is not None:
           self.ds_ip = sgw_config.ds_ip
+        if sgw_config.ds_port is not None:
+          self.ds_port = sgw_config.ds_port
         if sgw_config.sgw_s11_port is not None:
           self.sgw_s11_port = sgw_config.sgw_s11_port
         if sgw_config.sgw_s1_port is not None:
@@ -164,6 +168,8 @@ class SGW_Processor(P):
                        self._sgw_config.pgw_s5_ip_addr,
                        self._sgw_config.ds_ip)
 
+        if self._sgw_config.ds_port is not None:
+            args += ' --ds_port %s' % self._sgw_config.ds_port
         if self._sgw_config.sgw_s11_port is not None:
             args += ' --sgw_s11_port %s' % self._sgw_config.sgw_s11_port
         if self._sgw_config.sgw_s1_port is not None:
