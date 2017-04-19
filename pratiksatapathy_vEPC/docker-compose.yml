@@ -1,11 +1,19 @@
 version: '3'
 
 services:
+  epc_deps:
+    build:
+      context: .
+      dockerfile: Dockerfile.deps
+    image: epc_deps:SNAPSHOT
+
   epc_base:
     build:
       context: .
       dockerfile: Dockerfile.base
     image: epc_base:SNAPSHOT
+    depends_on:
+      - epc_deps
 
   mme_pp:
     build:
@@ -22,6 +30,8 @@ services:
       dockerfile: Dockerfile.hss
     image: hss_pp:SNAPSHOT
     container_name: hss_pp
+    depends_on:
+      - epc_base
 
   pgw_pp:
     build:
