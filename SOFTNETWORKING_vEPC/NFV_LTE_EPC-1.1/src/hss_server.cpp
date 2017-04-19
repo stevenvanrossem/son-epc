@@ -6,6 +6,7 @@
 #define HSS_IP "hss_ip"
 #define HSS_PORT "hss_port"
 #define DS_IP "ds_ip"
+#define DS_PORT "ds_port"
 
 Hss g_hss;
 int g_workers_count;
@@ -66,6 +67,7 @@ void readConfig(int ac, char *av[]) {
     (THREADS_COUNT, po::value<int>(), "Number of threads")
     (HSS_IP, po::value<string>(), "IP addres of the HSS")
     (DS_IP, po::value<string>(), "IP addres of the datastore")
+    (DS_PORT, po::value<int>()->default_value(8090), "Port of the datastore")
     (HSS_PORT, po::value<int>()->default_value(g_hss_port), "Port of the HSS")
     ;
 
@@ -82,7 +84,9 @@ void readConfig(int ac, char *av[]) {
   g_workers_count = vm[THREADS_COUNT].as<int>();
   g_hss_ip_addr =  vm[HSS_IP].as<string>();
   g_hss_port = vm[HSS_PORT].as<int>();
-  //ds_path = vm[DS_IP].as<int>();
+  std::stringstream sstm;
+  sstm << vm[DS_IP].as<string>() << ':' << vm[DS_PORT].as<int>();
+  ds_path = sstm.str();
 }
 
 int main(int argc, char *argv[]) {

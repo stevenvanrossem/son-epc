@@ -10,6 +10,7 @@
 #define SGW_S5_IP_ADDR "sgw_s5_ip_addr"
 #define PGW_S5_IP_ADDR "pgw_s5_ip_addr"
 #define DS_IP "ds_ip"
+#define DS_PORT "ds_port"
 #define SGW_S11_PORT "sgw_s11_port"
 #define SGW_S1_PORT "sgw_s1_port"
 #define SGW_S5_PORT "sgw_s5_port"
@@ -39,7 +40,7 @@ void run() {
 	//uplink clients
 	pgw_s5_clients.resize(g_s1_server_threads_count);
 	for (i = 0; i < g_s1_server_threads_count; i++) {
-		pgw_s5_clients[i].conn(SGW,PGWLB,8000);
+		pgw_s5_clients[i].conn(g_sgw_s11_ip_addr,g_pgw_s5_ip_addr,g_pgw_s5_port);
 	}
 	/* SGW S11 server */
 	TRACE(cout << "SGW S11 server started" << endl;)
@@ -185,6 +186,7 @@ void readConfig(int ac, char *av[]) {
     (SGW_S5_IP_ADDR, po::value<string>(), "IP address of SGW's S5 interface")
     (PGW_S5_IP_ADDR, po::value<string>(), "IP address of PGW's S5 interface")
     (DS_IP, po::value<string>(), "IP address of the datastore")
+    (DS_PORT, po::value<int>()->default_value(8090), "Port of the datastore")
 
     (SGW_S11_PORT, po::value<int>()->default_value(g_sgw_s11_port), "Port of the SGW's S11 interface")
     (SGW_S1_PORT, po::value<int>()->default_value(g_sgw_s1_port), "Port of the SGW's S1 interface")
@@ -215,7 +217,10 @@ void readConfig(int ac, char *av[]) {
   g_sgw_s1_ip_addr = vm[SGW_S1_IP_ADDR].as<string>();
   g_sgw_s5_ip_addr = vm[SGW_S5_IP_ADDR].as<string>();
   g_pgw_s5_ip_addr = vm[PGW_S5_IP_ADDR].as<string>();
-  dssgw_path = vm[DS_IP].as<string>();
+  std::stringstream sstm;
+  sstm << vm[DS_IP].as<string>() << ':' << vm[DS_PORT].as<int>();
+  dssgw_path = sstm.str();
+
   g_sgw_s11_port = vm[SGW_S11_PORT].as<int>();
   g_sgw_s1_port = vm[SGW_S1_PORT].as<int>();
   g_sgw_s5_port = vm[SGW_S5_PORT].as<int>();

@@ -93,6 +93,7 @@ class Client(object):
                 'sgw_s11_ip': self.spgw_data,
                 'sgw_s5_ip': self.sgw_s5_ip,
                 'ds_ip': self.ds_ip,
+                'mme_ip': self.mme_data,
                 'pgw_s5_ip': self.pgw_s5_ip
             }
         else:

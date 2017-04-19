@@ -13,6 +13,7 @@ class PGW_MessageParser(object):
     MSG_PGW_SGI_IP = 'pgw_sgi_ip'
     MSG_SINK_IP_ADDR = 'sink_ip_addr'
     MSG_DS_IP = 'ds_ip'
+    MSG_DS_PORT = 'ds_port'
     MSG_SGW_S5_PORT = 'sgw_s5_port'
     MSG_PGW_S5_PORT = 'pgw_s5_port'
     MSG_PGW_SGI_PORT = 'pgw_sgi_port'
@@ -20,7 +21,7 @@ class PGW_MessageParser(object):
 
     MSG = [MSG_S5_THREADS_COUNT, MSG_SGI_THREADS_COUNT,
            MSG_SGW_S5_IP, MSG_PGW_S5_IP,
-           MSG_PGW_SGI_IP, MSG_DS_IP,
+           MSG_PGW_SGI_IP, MSG_DS_IP, MSG_DS_PORT,
            MSG_SINK_IP_ADDR, MSG_SGW_S5_PORT,
            MSG_PGW_S5_PORT, MSG_PGW_SGI_PORT,
            MSG_SINK_PORT]
@@ -44,7 +45,7 @@ class PGW_Config(utils.CommandConfig):
 
     def __init__(self, s5_threads_count = None, sgi_threads_count = None,
                  sgw_s5_ip = None, pgw_s5_ip = None, pgw_sgi_ip = None,
-                 sink_ip_addr = None, ds_ip = None, sgw_s5_port = None,
+                 sink_ip_addr = None, ds_ip = None, ds_port = None, sgw_s5_port = None,
                  pgw_s5_port = None, pgw_sgi_port = None, sink_port = None,
                  **kwargs):
         self.s5_threads_count = s5_threads_count
@@ -54,6 +55,7 @@ class PGW_Config(utils.CommandConfig):
         self.pgw_sgi_ip = pgw_sgi_ip
         self.sink_ip_addr = sink_ip_addr
         self.ds_ip = ds_ip
+        self.ds_port = ds_port
         self.sgw_s5_port = sgw_s5_port
         self.pgw_s5_port = pgw_s5_port
         self.pgw_sgi_port = pgw_sgi_port
@@ -79,6 +81,8 @@ class PGW_Config(utils.CommandConfig):
             self.sink_ip_addr = pgw_config.sink_ip_addr
         if pgw_config.ds_ip is not None:
             self.ds_ip = pgw_config.ds_ip
+        if pgw_config.ds_port is not None:
+            self.ds_port = pgw_config.ds_port
         if pgw_config.sgw_s5_port is not None:
             self.sgw_s5_port = pgw_config.sgw_s5_port
         if pgw_config.pgw_s5_port is not None:
@@ -96,7 +100,7 @@ class PGW_Processor(P):
     def __init__(self):
         self.logger = logging.getLogger(PGW_Processor.__name__)
 
-        self._log_dir = tempfile.TemporaryDirectory(prefix='pgw.processor')
+        self._log_dir = tempfile.TemporaryDirectory(prefix='mme.processor')
         self._log_dir_name = self._log_dir.name
         self._runner = utils.Runner(self.PGW_EXECUTABLE,
                                     log_dir=self._log_dir_name)
@@ -159,6 +163,8 @@ class PGW_Processor(P):
                        self._pgw_config.sink_ip_addr,
                        self._pgw_config.ds_ip)
 
+        if self._pgw_config.ds_port is not None:
+          args += ' --ds_port %s' % self._pgw_config.ds_port
         if self._pgw_config.sgw_s5_port is not None:
           args += ' --sgw_s5_port %s' % self._pgw_config.sgw_s5_port
         if self._pgw_config.pgw_s5_port is not None:
