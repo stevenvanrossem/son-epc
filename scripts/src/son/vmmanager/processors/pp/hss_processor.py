@@ -10,6 +10,7 @@ class HSS_MessageParser(object):
     MSG_IP = 'ip'
     MSG_PORT = 'port'
     MSG_DS_IP = 'ds_ip'
+    MSG_DS_PORT = 'ds_port'
 
     def __init__(self, json_dict):
         self.logger = logging.getLogger(HSS_MessageParser.__name__)
@@ -21,10 +22,12 @@ class HSS_MessageParser(object):
         ip = self.msg_dict.get(self.MSG_IP, None)
         port = self.msg_dict.get(self.MSG_PORT, None)
         ds_ip = self.msg_dict.get(self.MSG_DS_IP, None)
-        self.logger.info('Got arguments: ip=%s; port=%s; thread counts=%s; ds_ip=%s',
-                         ip, port, tc, ds_ip)
+        ds_port = self.msg_dict.get(self.MSG_DS_PORT, None)
+        self.logger.info('Got arguments: ip=%s; port=%s; thread counts=%s; '
+                         'ds_ip=%s; ds_port=%s',
+                         ip, port, tc, ds_ip, ds_port)
 
-        hc = HSS_Config(tc, ip , port, ds_ip)
+        hc = HSS_Config(tc, ip , port, ds_ip, ds_port)
         self.command_parser.parse(hc)
         return hc
 
@@ -32,11 +35,12 @@ class HSS_MessageParser(object):
 class HSS_Config(utils.CommandConfig):
 
     def __init__(self, threads_count = None, ip = None, port = None,
-                 ds_ip = None, **kwargs):
+                 ds_ip = None, ds_port = None, **kwargs):
         self.threads_count = threads_count
         self.ip = ip
         self.port = port
         self.ds_ip = ds_ip
+        self.ds_port = ds_port
         super(self.__class__, self).__init__(**kwargs)
 
     def update(self, hss_config):
@@ -51,6 +55,8 @@ class HSS_Config(utils.CommandConfig):
             self.threads_count = hss_config.threads_count
         if hss_config.ds_ip is not None:
             self.ds_ip = hss_config.ds_ip
+        if hss_config.ds_port is not None:
+            self.ds_port = hss_config.ds_port
 
 
 class HSS_Processor(P):
@@ -111,6 +117,8 @@ class HSS_Processor(P):
                        self._hss_config.ds_ip)
         if  self._hss_config.port is not None:
             args += ' --hss_port %s' % self._hss_config.port
+        if  self._hss_config.ds_port is not None:
+            args += ' --ds_port %s' % self._hss_config.ds_port
 
         self._runner.setArguments(args)
 
