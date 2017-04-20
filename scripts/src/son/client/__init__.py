@@ -12,7 +12,7 @@ class Client(object):
                  hss_host, mme_host, spgw_host,
                  mme_s1_ip, spgw_s1_ip, spgw_sgi_ip,
                  pgw_s5_ip = None, sgw_s5_ip = None,
-                 sink_ip = None, pgw_mgmt = None,
+                 trafmon_ip = None, sink_ip = None, pgw_mgmt = None,
                  ds_ip = None, isPp = False):
         self.hss_mgmt = hss_mgmt
         self.mme_mgmt = mme_mgmt
@@ -28,6 +28,7 @@ class Client(object):
         self.spgw_sgi_ip = spgw_sgi_ip
         self.pgw_s5_ip = pgw_s5_ip
         self.sgw_s5_ip = sgw_s5_ip
+        self.trafmon_ip = trafmon_ip
         self.sink_ip = sink_ip
         self.pgw_mgmt = pgw_mgmt
         self.ds_ip = ds_ip
@@ -93,9 +94,10 @@ class Client(object):
                 'sgw_s11_ip': self.spgw_data,
                 'sgw_s5_ip': self.sgw_s5_ip,
                 'ds_ip': self.ds_ip,
-                'mme_s1_ip': self.mme_s1_data,
+                'mme_s1_ip': self.mme_s1_ip,
                 'mme_s11_ip': self.mme_data,
-                'pgw_s5_ip': self.pgw_s5_ip
+                'pgw_s5_ip': self.pgw_s5_ip,
+                'trafmon_ip': self.trafmon_ip
             }
         else:
             self.mme_config = {
@@ -182,6 +184,8 @@ def parseScenarioSelection(argv):
                         help='S5 IP of SGW')
     parser.add_argument('--pgw_s5_ip', required=False,
                         help='S5 IP of PGW')
+    parser.add_argument('--trafmon_ip', required=False,
+                        help='IP of traffic monitor')
     parser.add_argument('--sink_ip', required=False,
                         help='IP of sink')
     parser.add_argument('--pgw_mgmt', required=False,
@@ -230,6 +234,7 @@ def main(argv = sys.argv[1:]):
         scenarioArgs.pgw_s5_ip is not None and \
         scenarioArgs.pgw_mgmt is not None and \
         scenarioArgs.ds_ip is not None and \
+        scenarioArgs.trafmon_ip is not None and \
         scenarioArgs.sink_ip is not None:
         c = Client(hss_mgmt = configArgs.hss_mgmt, hss_data = configArgs.hss_data,
                 mme_mgmt = configArgs.mme_mgmt, mme_data = configArgs.mme_data,
@@ -242,6 +247,7 @@ def main(argv = sys.argv[1:]):
                 sgw_s5_ip = scenarioArgs.sgw_s5_ip,
                 pgw_s5_ip = scenarioArgs.pgw_s5_ip,
                 sink_ip = scenarioArgs.sink_ip,
+                trafmon_ip = scenarioArgs.trafmon_ip,
                 pgw_mgmt = scenarioArgs.pgw_mgmt,
                 ds_ip = scenarioArgs.ds_ip,
                 isPp = True)
@@ -249,7 +255,7 @@ def main(argv = sys.argv[1:]):
         logger.error('--oai or --pp must be specified to select EPC implementation')
         logger.error('--pp needs the IPs of S5 interfaces,'
                      'the IP of the PGW\'s mgmt and the IP of sink and the IP of the datastore '
-                     '(--sgw_s5_ip, --pgw_s5_ip, --pgw_mgmt and --sink_ip --ds_ip)')
+                     '(--sgw_s5_ip, --pgw_s5_ip, --pgw_mgmt and --sink_ip --ds_ip --trafmon_ip)')
         return
 
 
