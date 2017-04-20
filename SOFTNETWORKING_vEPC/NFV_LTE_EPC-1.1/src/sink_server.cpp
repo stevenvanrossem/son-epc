@@ -41,7 +41,7 @@ void sink(int sink_num) {
 	int port;
 
 	port = (sink_num + 55000);
-	cmd = "iperf3 -s -B 172.16.0.2 -i1 -p " + to_string(port);
+	cmd = "iperf3 -s -B 172.16.0.2 -p " + to_string(port);
 	cout<<cmd<<endl;
 	system(cmd.c_str());
 }
