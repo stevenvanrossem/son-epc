@@ -118,9 +118,8 @@ void simulate(int arg) {
 		/* Updating performance metrics */
 		g_sync.mlock(g_mux);
 		g_tot_regs++;
-		g_tot_regstime += mtime_diff_us.count();		
+		g_tot_regstime += mtime_diff_us.count();
 		g_sync.munlock(g_mux);
-
 	}
 }
 
@@ -185,13 +184,16 @@ void readConfig(int ac, char *av[]) {
   po::store(po::parse_command_line(ac, av, desc), vm);
   po::notify(vm);
 
-  if (vm.count(THREADS_COUNT) ||
-      vm.count(DURATION) ||
-      vm.count(RAN_IP_ADDR) ||
-      vm.count(TRAFMON_IP_ADDR) ||
-      vm.count(MME_IP_ADDR) ||
-      vm.count(SGW_S1_IP_ADDR)) {
+  bool reqMissing = false;
+  reqMissing |= vm.find(THREADS_COUNT) == vm.end();
+  reqMissing |= vm.find(DURATION) == vm.end();
+  reqMissing |= vm.find(RAN_IP_ADDR) == vm.end();
+  reqMissing |= vm.find(TRAFMON_IP_ADDR) == vm.end();
+  reqMissing |= vm.find(MME_IP_ADDR) == vm.end();
+  reqMissing |=  vm.find(SGW_S1_IP_ADDR) == vm.end();
+  if (reqMissing) {
     TRACE(cout << desc << endl;)
+    exit(1);
   }
 
   g_req_dur = vm[DURATION].as<int>();;

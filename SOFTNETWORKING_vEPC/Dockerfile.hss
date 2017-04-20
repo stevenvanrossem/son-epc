@@ -6,8 +6,11 @@ FROM epc_base:SNAPSHOT
 WORKDIR /root
 COPY start_vm_server_and_ds.sh ./start_vm_server_and_ds.sh
 RUN chmod a+x start_vm_server_and_ds.sh
+RUN chmod u+x /root/NFV_LTE_EPC/NFV_LTE_EPC-1.1/scripts/setup_ds/run_server.sh
+RUN chmod u+x /root/NFV_LTE_EPC/NFV_LTE_EPC-1.1/scripts/setup_hss/load_data.sh
 
 #CMD son-vm-server -v -c /root/son-epc/pratiksatapathy_vEPC/server.conf.hss
-ENV SON_EMU_CMD "./start_vm_server_and_ds.sh"
+ENV SON_EMU_CMD "./start_vm_server_and_ds.sh > log"
 
 CMD /bin/bash
+

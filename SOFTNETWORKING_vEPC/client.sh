@@ -5,7 +5,7 @@ hss_mgmt="172.17.0.5"
 hss_data="10.20.0.1"
 #mme_mgmt=`sudo docker inspect mme_pp | jq '.[0].NetworkSettings.Networks.pratiksatapathyvepc_default.IPAddress' | sed 's/"//g'`
 mme_mgmt="172.17.0.2"
-mme_data="10.20.0.2"
+mme_data="10.10.0.2"
 #pgw_mgmt=`sudo docker inspect pgw_pp | jq '.[0].NetworkSettings.Networks.pratiksatapathyvepc_default.IPAddress' | sed 's/"//g'`
 pgw_mgmt="172.17.0.3"
 #sgw_mgmt=`sudo docker inspect sgw_pp | jq '.[0].NetworkSettings.Networks.pratiksatapathyvepc_default.IPAddress' | sed 's/"//g'`
@@ -25,7 +25,7 @@ ds_ip="172.17.0.5"
 
 sgw_s5_ip="10.30.1.2"
 pgw_s5_ip="10.30.1.1"
-mme_s1_ip="10.10.0.2"
+mme_s1_ip="10.10.0.2" #not used in vEPC:pp
 sgw_s1_ip="10.10.1.2"
 pgw_sgi_ip="10.30.3.1"
 sink_ip="10.30.3.2"

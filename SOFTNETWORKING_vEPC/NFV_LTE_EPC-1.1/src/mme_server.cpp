@@ -144,25 +144,29 @@ void readConfig(int ac, char *av[]) {
   po::store(po::parse_command_line(ac, av, desc), vm);
   po::notify(vm);
 
-  if (vm.count(THREADS_COUNT) ||
-      vm.count(HSS_IP) ||
-      vm.count(MME_IP) ||
-      vm.count(SGW_S1_IP) ||
-      vm.count(SGW_S11_IP) ||
-      vm.count(SGW_S5_IP) ||
-      vm.count(DS_IP) ||
-      vm.count(PGW_S5_IP)) {
+  bool reqMissing = false;
+  reqMissing |= vm.find(THREADS_COUNT) == vm.end();
+  reqMissing |= vm.find(HSS_IP) == vm.end();
+  reqMissing |= vm.find(MME_IP) == vm.end();
+  reqMissing |= vm.find(SGW_S1_IP) == vm.end();
+  reqMissing |= vm.find(SGW_S11_IP) == vm.end();
+  reqMissing |= vm.find(SGW_S5_IP) == vm.end();
+  reqMissing |= vm.find(DS_IP) == vm.end();
+  reqMissing |= vm.find(PGW_S5_IP) == vm.end();
+  if (reqMissing) {
     TRACE(cout << desc << endl;)
+    exit(1);
   }
+
 
   g_workers_count = vm[THREADS_COUNT].as<int>();
   g_hss_ip_addr =  vm[HSS_IP].as<string>();
   g_mme_ip_addr =  vm[MME_IP].as<string>();
   g_hss_port = vm[HSS_PORT].as<int>();
 
-  g_sgw_s11_ip_addr = vm[SGW_S1_IP].as<string>();
-  g_sgw_s1_ip_addr = vm[SGW_S5_IP].as<string>();
-  g_sgw_s5_ip_addr = vm[SGW_S11_IP].as<string>();
+  g_sgw_s11_ip_addr = vm[SGW_S11_IP].as<string>();
+  g_sgw_s1_ip_addr = vm[SGW_S1_IP].as<string>();
+  g_sgw_s5_ip_addr = vm[SGW_S5_IP].as<string>();
   g_pgw_s5_ip_addr = vm[PGW_S5_IP].as<string>();
   std::stringstream sstm;
   sstm << vm[DS_IP].as<string>() << ':' << vm[DS_PORT].as<int>();

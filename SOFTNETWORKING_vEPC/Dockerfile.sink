@@ -1,16 +1,31 @@
 FROM epc_base:SNAPSHOT
 
-RUN	apt-get install -y \
-        lib323z1
 
-WORKDIR / 
-RUN git clone https://github.com/esnet/iperf.git   
-WORKDIR iperf
-RUN ./configure
-RUN make
-RUN make install
+RUN	apt-get update && apt-get install -y \
+	net-tools \
+	iproute \
+	inetutils-ping \
+	tcpreplay \
+	nmap \
+	curl \
+	tcpdump \
+	bmon \
+	netcat \
+	ssh \
+        ethtool \
+        iperf3
 
-ENV SON_EMU_CMD "/root/son-vm/start.sh"
+#RUN	apt-get install -y \
+#        lib323z1
+
+#WORKDIR / 
+#RUN git clone https://github.com/esnet/iperf.git   
+#WORKDIR iperf
+#RUN ./configure
+#RUN make
+#RUN make install
+
+ENV SON_EMU_CMD "/bin/bash"
 
 CMD /bin/bash
 
