@@ -14,6 +14,7 @@
 ** 9090 # Prometheus                                      ** 
 ** 9091 # Prometheus push gateway                         ** 
 ** 3000 # Grafana                                         **  
+** 81 # Editor                                            ** 
 **                                                        ** 
 ** SONATA example services can be found in son-examples/  **
 **                                                        **

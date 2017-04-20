@@ -122,6 +122,8 @@ Vagrant.configure(2) do |config|
   config.vm.provision "file", source: "./config.yaml", destination: "/tmp/config.yaml"
 
   # change default password of the VM
+  # due to a bug in the ubuntu xenial vagrant box, password for vagrant user is not known...
+  # we add some new users ourselves 
   config.vm.provision "password", type: "shell", inline: <<-SHELL 
      apt-get install -y expect
      echo '#!/usr/bin/expect
@@ -134,6 +136,17 @@ Vagrant.configure(2) do |config|
     ./change_ubuntu_password
   SHELL
 
+  #config.vm.provision "add_user", type: "shell", inline: <<-SHELL 
+  #   echo '#!/usr/bin/expect
+  #    set timeout 20
+  #    spawn sudo adduser sonata
+  #    expect "Enter new UNIX password:" {send "sonata\\r"}
+  #    expect "Retype new UNIX password:" {send "sonata\\r"}
+  #    expect "Full Name []:" {send "\003"}
+  #    interact' > change_sonata_password
+  #  chmod +x change_sonata_password
+  #  ./change_sonata_password
+  #SHELL
 
   # Enable provisioning with a shell script. Additional provisioners such as
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
