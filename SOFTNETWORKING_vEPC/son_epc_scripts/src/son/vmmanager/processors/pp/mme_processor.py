@@ -8,7 +8,8 @@ class MME_MessageParser(object):
 
     MSG_THREADS_COUNT = 'threads_count'
     MSG_HSS_IP = 'hss_ip'
-    MSG_MME_IP = 'mme_ip'
+    MSG_MME_S11_IP = 'mme_s11_ip'
+    MSG_MME_S1_IP = 'mme_s1_ip'
     MSG_HSS_PORT = 'hss_port'
     MSG_SGW_S1_IP = 'sgw_s1_ip'
     MSG_SGW_S11_IP = 'sgw_s11_ip'
@@ -24,10 +25,10 @@ class MME_MessageParser(object):
     MSG_PGW_S5_PORT = 'pgw_s5_port'
 
     MSG = [MSG_THREADS_COUNT, MSG_HSS_IP, MSG_HSS_PORT,
-           MSG_HSS_IP, MSG_SGW_S1_IP, MSG_SGW_S11_IP, MSG_SGW_S5_IP, MSG_MME_IP,
-           MSG_PGW_S5_IP, MSG_DS_IP, MSG_DS_PORT, MSG_TRAFMON_PORT, MSG_MME_PORT,
-           MSG_SGW_S11_PORT, MSG_SGW_S1_PORT, MSG_SGW_S5_PORT,
-           MSG_PGW_S5_PORT]
+           MSG_HSS_IP, MSG_SGW_S1_IP, MSG_SGW_S11_IP, MSG_SGW_S5_IP,
+           MSG_MME_S11_IP, MSG_MME_S1_IP, MSG_PGW_S5_IP, MSG_DS_IP, MSG_DS_PORT,
+           MSG_TRAFMON_PORT, MSG_MME_PORT, MSG_SGW_S11_PORT, MSG_SGW_S1_PORT,
+           MSG_SGW_S5_PORT, MSG_PGW_S5_PORT]
 
     def __init__(self, json_dict):
         self.logger = logging.getLogger(MME_MessageParser.__name__)
@@ -47,15 +48,16 @@ class MME_MessageParser(object):
 
 class MME_Config(utils.CommandConfig):
 
-    def __init__(self, threads_count = None, hss_ip = None, mme_ip = None,
-                 hss_port = None, sgw_s1_ip = None, sgw_s11_ip = None,
-                 sgw_s5_ip = None, pgw_s5_ip = None, ds_ip = None, ds_port = None,
-                 trafmon_port = None, mme_port = None, sgw_s11_port = None,
-                 sgw_s1_port = None, sgw_s5_port = None, pgw_s5_port = None,
-                 **kwargs):
+    def __init__(self, threads_count = None, hss_ip = None, mme_s1_ip = None,
+                 mme_s11_ip = None, hss_port = None, sgw_s1_ip = None,
+                 sgw_s11_ip = None, sgw_s5_ip = None, pgw_s5_ip = None,
+                 ds_ip = None, ds_port = None, trafmon_port = None,
+                 mme_port = None, sgw_s11_port = None, sgw_s1_port = None,
+                 sgw_s5_port = None, pgw_s5_port = None, **kwargs):
         self.threads_count = threads_count
         self.hss_ip = hss_ip
-        self.mme_ip = mme_ip
+        self.mme_s1_ip = mme_s1_ip
+        self.mme_s11_ip = mme_s11_ip
         self.hss_port = hss_port
         self.sgw_s1_ip = sgw_s1_ip
         self.sgw_s11_ip = sgw_s11_ip
@@ -80,8 +82,10 @@ class MME_Config(utils.CommandConfig):
             self.threads_count = mme_config.threads_count
         if mme_config.hss_ip is not None:
             self.hss_ip = mme_config.hss_ip
-        if mme_config.mme_ip is not None:
-            self.mme_ip = mme_config.mme_ip
+        if mme_config.mme_s1_ip is not None:
+            self.mme_s1_ip = mme_config.mme_s1_ip
+        if mme_config.mme_s11_ip is not None:
+            self.mme_s11_ip = mme_config.mme_s11_ip
         if mme_config.hss_port is not None:
             self.hss_port = mme_config.hss_port
         if mme_config.sgw_s1_ip is not None:
@@ -157,7 +161,8 @@ class MME_Processor(P):
     def _setArguments(self):
         nvalid = self._mme_config.threads_count is None
         nvalid = nvalid or self._mme_config.hss_ip is None
-        nvalid = nvalid or self._mme_config.mme_ip is None
+        nvalid = nvalid or self._mme_config.mme_s1_ip is None
+        nvalid = nvalid or self._mme_config.mme_s11_ip is None
         nvalid = nvalid or self._mme_config.sgw_s1_ip is None
         nvalid = nvalid or self._mme_config.sgw_s11_ip is None
         nvalid = nvalid or self._mme_config.sgw_s5_ip is None
@@ -171,7 +176,7 @@ class MME_Processor(P):
         args = ('--threads_count %s --hss_ip %s '
                 '--sgw_s1_ip %s --sgw_s11_ip %s '
                 '--sgw_s5_ip %s --pgw_s5_ip %s '
-                '--ds_ip %s --mme_ip %s')
+                '--ds_ip %s --mme_s1_ip %s --mme_s11_ip %s')
         args = args % (self._mme_config.threads_count,
                self._mme_config.hss_ip,
                self._mme_config.sgw_s1_ip,
@@ -179,7 +184,8 @@ class MME_Processor(P):
                self._mme_config.sgw_s5_ip,
                self._mme_config.pgw_s5_ip,
                self._mme_config.ds_ip,
-               self._mme_config.mme_ip)
+               self._mme_config.mme_s1_ip,
+               self._mme_config.mme_s11_ip)
 
         if self._mme_config.ds_port is not None:
             args += ' --ds_port %s' % self._mme_config.ds_port

@@ -7,7 +7,7 @@
 
 #define RAN_IP_ADDR "ran_ip_addr"
 #define TRAFMON_IP_ADDR "trafmon_ip_addr"
-#define MME_IP_ADDR "mme_ip_addr"
+#define MME_S1_IP_ADDR "mme_ip_addr"
 #define TRAFMON_PORT "trafmon_port"
 #define MME_PORT "mme_port"
 #define SGW_S1_IP_ADDR "sgw_s1_ip_addr"
@@ -62,7 +62,6 @@ void simulate(int arg) {
 
 	ran_num = arg;
 	time_exceeded = false;
-
 	ran.init(ran_num);
 	ran.conn_mme();
 
@@ -85,7 +84,6 @@ void simulate(int arg) {
 			TRACE(cout << "ransimulator_simulate:" << " autn failure" << endl;)
 		 					return;
 		}
-		cout<<"sgwclient initiated13"<<endl;
 
 		// // Set security
 		ok = ran.set_security();
@@ -149,7 +147,7 @@ void init() {
 void run() {
 	int i;
 
-	// Tun
+	///* Tun
 	g_traf_mon.tun.set_itf("tun1", "172.16.0.1/16");
 	g_traf_mon.tun.conn("tun1");
 
@@ -184,7 +182,6 @@ void run() {
 			g_threads[i].join();
 		}
 	}	
-
 }
 
 void print_results() {
@@ -210,7 +207,7 @@ void readConfig(int ac, char *av[]) {
     (RATE, po::value<int>(), "Rate of sent traffic by iperf in Mbps")
     (RAN_IP_ADDR, po::value<string>(), "IP address of the simulator")
     (TRAFMON_IP_ADDR, po::value<string>(), "IP address of the traffic monitor")
-    (MME_IP_ADDR, po::value<string>(), "IP address of the MME")
+    (MME_S1_IP_ADDR, po::value<string>(), "IP address of the MME's S1 interface")
     (TRAFMON_PORT, po::value<int>()->default_value(g_trafmon_port), "Port of the trraffic monitor")
     (MME_PORT, po::value<int>()->default_value(g_mme_port), "Port of the MME")
     (SGW_S1_IP_ADDR, po::value<string>(), "IP address of SGW's S1 interface")
@@ -226,7 +223,7 @@ void readConfig(int ac, char *av[]) {
   reqMissing |= vm.find(RATE) == vm.end();
   reqMissing |= vm.find(RAN_IP_ADDR) == vm.end();
   reqMissing |= vm.find(TRAFMON_IP_ADDR) == vm.end();
-  reqMissing |= vm.find(MME_IP_ADDR) == vm.end();
+  reqMissing |= vm.find(MME_S1_IP_ADDR) == vm.end();
   reqMissing |=  vm.find(SGW_S1_IP_ADDR) == vm.end();
   if (reqMissing) {
     TRACE(cout << desc << endl;)
@@ -239,7 +236,7 @@ void readConfig(int ac, char *av[]) {
 
   g_ran_ip_addr = vm[RAN_IP_ADDR].as<string>();
   g_trafmon_ip_addr = vm[TRAFMON_IP_ADDR].as<string>();
-  g_mme_ip_addr = vm[MME_IP_ADDR].as<string>();
+  g_mme_s1_ip_addr = vm[MME_S1_IP_ADDR].as<string>();
   g_trafmon_port = vm[TRAFMON_PORT].as<int>();
   g_mme_port = vm[MME_PORT].as<int>();
   g_sgw_s1_ip_addr = vm[SGW_S1_IP_ADDR].as<string>();

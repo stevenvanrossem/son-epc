@@ -41,7 +41,7 @@ void sink(int sink_num) {
 	int port;
 
 	port = (sink_num + 55000);
-	cmd = "iperf3 -s -B 172.16.0.2 -p " + to_string(port);
+	cmd = "iperf3 -s -B 172.16.0.2 -i1 -p " + to_string(port);
 	cout<<cmd<<endl;
 	system(cmd.c_str());
 }
@@ -92,7 +92,7 @@ void readConfig(int ac, char *av[]) {
     (SINK_IP_ADDR, po::value<string>(), "IP address of the sink")
 
     (PGW_SGI_PORT, po::value<int>()->default_value(g_pgw_sgi_port), "Port of the PGW's SGI interface")
-    (SINK_PORT, po::value<int>()->default_value(g_pgw_sgi_port), "Port of the sink")
+    (SINK_PORT, po::value<int>()->default_value(g_sink_port), "Port of the sink")
     ;
   po::variables_map vm;
   po::store(po::parse_command_line(ac, av, desc), vm);

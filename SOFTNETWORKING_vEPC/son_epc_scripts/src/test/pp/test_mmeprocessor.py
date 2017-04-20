@@ -19,7 +19,8 @@ SGW_S11_IP = '10.0.0.4'
 SGW_S5_IP = '10.0.0.5'
 PGW_S5_IP = '10.0.0.6'
 DS_IP = '10.0.0.7'
-MME_IP = '10.0.0.7'
+MME_S1_IP = '10.0.0.7'
+MME_S11_IP = '10.0.0.8'
 DS_PORT = '1234'
 TRAFMON_PORT = '1001'
 MME_PORT = '1002'
@@ -38,7 +39,8 @@ config_dict = {
     'sgw_s5_ip': SGW_S5_IP,
     'pgw_s5_ip': PGW_S5_IP,
     'ds_ip': DS_IP,
-    'mme_ip': MME_IP,
+    'mme_s1_ip': MME_S1_IP,
+    'mme_s11_ip': MME_S11_IP,
     'ds_port': DS_PORT,
     'trafmon_port': TRAFMON_PORT,
     'mme_port': MME_PORT,
@@ -65,17 +67,17 @@ class MME_Processor(unittest.TestCase):
         args = ('--threads_count %s --hss_ip %s '
                 '--sgw_s1_ip %s --sgw_s11_ip %s '
                 '--sgw_s5_ip %s --pgw_s5_ip %s '
-                '--ds_ip %s --mme_ip %s --ds_port %s '
+                '--ds_ip %s --mme_s1_ip %s --mme_s11_ip %s --ds_port %s '
                 '--trafmon_port %s --hss_port %s '
                 '--mme_port %s --sgw_s11_port %s --sgw_s1_port %s '
                 '--sgw_s5_port %s --pgw_s5_port %s')
         args = args % (THREADS_COUNT, HSS_IP,
                        SGW_S1_IP, SGW_S11_IP,
                        SGW_S5_IP, PGW_S5_IP,
-                       DS_IP, MME_IP, DS_PORT,
-                       TRAFMON_PORT, HSS_PORT,
-                       MME_PORT, SGW_S11_PORT, SGW_S1_PORT,
-                       SGW_S5_PORT, PGW_S5_PORT)
+                       DS_IP, MME_S1_IP, MME_S11_IP,
+                       DS_PORT, TRAFMON_PORT,
+                       HSS_PORT, MME_PORT, SGW_S11_PORT,
+                       SGW_S1_PORT, SGW_S5_PORT, PGW_S5_PORT)
         RunnerMock.setArguments.assert_called_once_with(args)
 
 
@@ -93,7 +95,8 @@ class MME_MsgParser(unittest.TestCase):
         self.assertEqual(config.sgw_s5_ip, SGW_S5_IP)
         self.assertEqual(config.pgw_s5_ip, PGW_S5_IP)
         self.assertEqual(config.ds_ip, DS_IP)
-        self.assertEqual(config.mme_ip, MME_IP)
+        self.assertEqual(config.mme_s1_ip, MME_S1_IP)
+        self.assertEqual(config.mme_s11_ip, MME_S11_IP)
         self.assertEqual(config.ds_port, DS_PORT)
         self.assertEqual(config.trafmon_port, TRAFMON_PORT)
         self.assertEqual(config.mme_port, MME_PORT)
