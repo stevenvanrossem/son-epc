@@ -131,10 +131,10 @@ Vagrant.configure(2) do |config|
     SHELL
 
   config.vm.provision "docker" do |d|
-    d.build_image "/home/ubuntu/son-monitor-probe/vm_mon", 
-      args: "-t son-vm-probe"
+    d.build_image "/home/ubuntu/son-monitor-probe", 
+      args: "-t son-vm-probe -f /home/ubuntu/son-monitor-probe/vm_mon/Dockerfile"
     d.run "son-vm-probe", 
-      args: "-e NODE_NAME=pgw1 -e PROM_SRV=http://192.168.1.153:9091/metrics --net=host --privileged=true  -v /proc:/myhost/proc -v /:/rootfs:ro"
+      args: "-e NODE_NAME=hss1 -e PROM_SRV=http://192.168.1.153:9091/metrics --net=host --privileged=true  -v /proc:/myhost/proc -v /:/rootfs:ro"
   end
 
   # start hss container
