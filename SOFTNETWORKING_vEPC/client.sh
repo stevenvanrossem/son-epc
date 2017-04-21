@@ -2,26 +2,26 @@
 
 
 mme_host="mme1"
-mme_mgmt="172.17.0.2"
+mme_mgmt="172.17.0.4"
 mme_s11="10.30.3.2" 
 mme_s1="10.10.0.2"
 
 hss_host="hss1"
-hss_mgmt="172.17.0.5"
+hss_mgmt="172.17.0.7"
 hss_s6a="10.30.1.1" 
 
 sgw_host="sgw1"
-sgw_mgmt="172.17.0.4"
+sgw_mgmt="172.17.0.6"
 sgw_s11="10.30.3.1" 
 sgw_s1="10.10.1.2"
 sgw_s5="10.30.5.2"
 
 pgw_host="pgw1"
-pgw_mgmt="172.17.0.3"
+pgw_mgmt="172.17.0.5"
 pgw_s5="10.30.5.1"
 pgw_sgi="10.30.7.1"
 
-ds_ip="172.17.0.5"
+ds_ip="172.17.0.7"
 
 sink_ip="10.30.7.2"
 
