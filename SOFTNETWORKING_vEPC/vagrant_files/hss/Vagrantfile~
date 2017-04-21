@@ -1,0 +1,152 @@
+# Copyright (c) 2015 SONATA-NFV and Paderborn University
+# ALL RIGHTS RESERVED.
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# Neither the name of the SONATA-NFV [, ANY ADDITIONAL AFFILIATION]
+# nor the names of its contributors may be used to endorse or promote
+# products derived from this software without specific prior written
+# permission.
+#
+# This work has been performed in the framework of the SONATA project,
+# funded by the European Commission under Grant number 671517 through
+# the Horizon 2020 and 5G-PPP programmes. The authors would like to
+# acknowledge the contributions of their colleagues of the SONATA
+# partner consortium (www.sonata-nfv.eu).
+
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+vm_name="hss1"
+hostname="hss1"
+
+# All Vagrant configuration is done below. The "2" in Vagrant.configure
+# configures the configuration version (we support older styles for
+# backwards compatibility). Please don't change it unless you know what
+# you're doing.
+
+Vagrant.configure(2) do |config|
+  # The most common configuration options are documented and commented below.
+  # For a complete reference, please see the online documentation at
+  # https://docs.vagrantup.com.
+
+  # Every Vagrant development environment requires a box. You can search for
+  # boxes at https://atlas.hashicorp.com/search.
+
+  # We build on 14.04 
+  config.vm.box = "ubuntu/trusty64"
+  
+  # SSH settings - generates error 
+  # sonata user was added manually - user: sonata - passw: sonata
+  #config.ssh.username = "vagrant"
+  #config.ssh.password = "vagrant"
+  #config.ssh.insert_key = "false"
+  #config.ssh.forward_x11 = true
+
+  # Disable automatic box update checking. If you disable this, then
+  # boxes will only be checked for updates when the user runs
+  # `vagrant box outdated`. This is not recommended.
+  # config.vm.box_check_update = false
+
+  # Create a forwarded port mapping which allows access to a specific port
+  # within the machine from a port on the host machine. In the example below,
+  # accessing "localhost:8080" will access port 80 on the guest machine.
+  # config.vm.network "forwarded_port", guest: 5000, host: 5000 # dummy gatekeeper
+ 
+
+  # Create a private network, which allows host-only access to the machine
+  # using a specific IP.
+  config.vm.network "private_network", type: "dhcp"
+  config.vm.network "private_network", type: "dhcp"
+  config.vm.network "private_network", type: "dhcp"
+
+
+  # Create a public network, which generally matched to bridged network.
+  # Bridged networks make the machine appear as another physical device on
+  # your network.
+  # config.vm.network "public_network"
+
+
+
+  # Provider-specific configuration so you can fine-tune various
+  # backing providers for Vagrant. These expose provider-specific options.
+  # Example for VirtualBox:
+  #
+  config.vm.provider "virtualbox" do |vb|
+    vb.name = "#{vm_name}"
+  end
+
+
+  config.vm.hostname = "#{hostname}"
+
+  config.vm.provision "basics", type: "shell", inline: <<-SHELL 
+     sudo apt-get update
+     sudo apt-get install -y git net-tools iproute inetutils-ping build-essential
+  SHELL
+
+
+  # install Docker
+  config.vm.provision "docker" do |d|
+
+  end
+
+  # Enable provisioning with a shell script. Additional provisioners such as
+  # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
+  # documentation for more information about their specific syntax and use.
+  config.vm.provision "git_pull", type: "shell", inline: <<-SHELL
+
+     # add users to docker groupt to avoid sudo typing
+     sudo gpasswd -a vagrant docker
+     #sudo gpasswd -a ubuntu docker
+     #sudo gpasswd -a sonata docker
+     
+     #cd /home/ubuntu
+     #git clone https://github.com/sonata-nfv/son-monitor-probe.git
+     
+     cd /home/ubuntu
+     rm -r son-epc
+     git clone https://github.com/stevenvanrossem/son-epc.git
+     cd son-epc/SOFTNETWORKING_vEPC
+     bash build_vepc_containers.sh
+     
+  SHELL
+  
+  config.vm.provision "file", source: "./son-monitor-probe", destination: "/tmp/son-monitor-probe"
+
+  config.vm.provision "monitor_pull", type: "shell", inline: <<-SHELL
+     cd /home/ubuntu
+     rm -r ./son-monitor-probe
+     sudo cp -r /tmp/son-monitor-probe ./
+     #rm -r son-monitor-probe
+     #git clone https://github.com/sonata-nfv/son-monitor-probe.git
+    SHELL
+
+  config.vm.provision "docker" do |d|
+    d.build_image "/home/ubuntu/son-monitor-probe/vm_mon", 
+      args: "-t son-vm-probe"
+    d.run "son-vm-probe", 
+      args: "-e NODE_NAME=hss1 -e PROM_SRV=http://192.168.1.153:9091/metrics --net=host --privileged=true  -v /proc:/myhost/proc -v /:/rootfs:ro"
+  end
+
+  # start hss container
+  config.vm.provision "docker" do |d|
+    
+    d.run "hss1",
+      image: "hss:v3",
+      cmd: "son-vm-server -v -c /root/son-epc/configs/server.conf.hss",
+      args: "--net=host --privileged=true"
+  end
+
+end
+  
+
