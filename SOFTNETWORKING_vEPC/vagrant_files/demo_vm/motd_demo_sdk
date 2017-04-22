@@ -1,0 +1,27 @@
+************************************************************
+**           Welcome to SONATA SDK VM                     **
+**                                                        **
+** All related files are in /home/ubuntu                  **
+**                                                        **
+** Start the emulator with a simple topology:             **
+**   cd son-emu/src/emuvim/examples                       **
+**   sudo python sonata_simple_topology.py                **
+**                                                        **
+** Available ports on the host machine:                   ** 
+** 5000 # dummy gatekeeper                                ** 
+** 5001 # REST API                                        ** 
+** 8081 # cAdvisor                                        **  
+** 9090 # Prometheus                                      ** 
+** 9091 # Prometheus push gateway                         ** 
+** 3000 # Grafana                                         **  
+** 8080 # Editor                                            ** 
+**                                                        ** 
+** SONATA example services can be found in son-examples/  **
+**                                                        **
+** The source code of the SDK tools is in son-cli/        **
+**                                                        **
+** All related documentation and source code:             **
+** https://github.com/sonata-nfv                          **
+** http://sonata-nfv.eu                                   ** 
+**                                                        **  
+************************************************************
