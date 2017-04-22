@@ -21,11 +21,13 @@ pgw_mgmt="172.17.0.5"
 pgw_s5="10.30.5.1"
 pgw_sgi="10.30.7.1"
 
-ds_ip="172.17.0.7"
+ds_ip=$hss_mgmt
 
+# public ip of the service, entrypoint SGi
 sink_ip="10.30.7.2"
 
-trafmon_ip="10.10.1.1" #SAP ip of the S1-U
+# public ip of the service, entrypoint S1-U
+trafmon_ip="10.10.1.1" 
 
 args="--hss_mgmt $hss_mgmt --hss_data $hss_s6a"
 args+=" --mme_mgmt $mme_mgmt --mme_data $mme_s11 --mme_s1_ip $mme_s1"
