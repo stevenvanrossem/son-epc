@@ -45,7 +45,8 @@ Vagrant.configure(2) do |config|
   # boxes at https://atlas.hashicorp.com/search.
 
   # We build on 14.04 
-  config.vm.box = "ubuntu/trusty64"
+  #config.vm.box = "ubuntu/trusty64"
+  config.vm.box = "jeff1evesque/trusty64"
   
   # SSH settings - generates error 
   # sonata user was added manually - user: sonata - passw: sonata
@@ -160,6 +161,7 @@ Vagrant.configure(2) do |config|
   # documentation for more information about their specific syntax and use.
   config.vm.provision "git_pull", type: "shell", inline: <<-SHELL
 
+     mkdir /home/ubuntu
      # add users to docker groupt to avoid sudo typing
      sudo gpasswd -a vagrant docker
      #sudo gpasswd -a ubuntu docker
@@ -180,17 +182,17 @@ Vagrant.configure(2) do |config|
 
   config.vm.provision "monitor_pull", type: "shell", inline: <<-SHELL
      cd /home/ubuntu
-     rm -r ./son-monitor-probe
-     sudo cp -r /tmp/son-monitor-probe ./
-     #rm -r son-monitor-probe
-     #git clone https://github.com/sonata-nfv/son-monitor-probe.git
+     #rm -r ./son-monitor-probe
+     #sudo cp -r /tmp/son-monitor-probe ./
+     rm -r son-monitor-probe
+     git clone https://github.com/sonata-nfv/son-monitor-probe.git
     SHELL
 
   config.vm.provision "docker" do |d|
     d.build_image "/home/ubuntu/son-monitor-probe", 
       args: "-t son-vm-probe -f /home/ubuntu/son-monitor-probe/vm_mon/Dockerfile"
     d.run "son-vm-probe", 
-      args: "-e NODE_NAME=hss1 -e PROM_SRV=http://192.168.1.153:9091/metrics --net=host --privileged=true  -v /proc:/myhost/proc -v /:/rootfs:ro"
+      args: "-e NODE_NAME=mme1 -e PROM_SRV=http://192.168.1.153:9091/metrics --net=host --privileged=true  -v /proc:/myhost/proc -v /:/rootfs:ro"
   end
 
   # start mme container

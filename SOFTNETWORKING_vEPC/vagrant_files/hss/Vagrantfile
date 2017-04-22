@@ -42,7 +42,8 @@ Vagrant.configure(2) do |config|
 
   # We build on 14.04 
   #config.vm.box = "ubuntu/trusty64"
-  config.vm.box = "bento/ubuntu-14.04"
+  #config.vm.box = "bento/ubuntu-14.04"
+  config.vm.box = "jeff1evesque/trusty64"
   
   # SSH settings - generates error 
   # sonata user was added manually - user: sonata - passw: sonata
