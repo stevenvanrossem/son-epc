@@ -25,6 +25,9 @@ RUN	apt-get update && apt-get install -y \
 #RUN make
 #RUN make install
 
+COPY start_sink.sh .
+RUN chmod a+rwx start_sink.sh
+
 ENV SON_EMU_CMD "/bin/bash"
 
 CMD /bin/bash

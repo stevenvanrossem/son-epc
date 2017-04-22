@@ -321,7 +321,7 @@ bool Ran::set_eps_session(TrafficMonitor &traf_mon) {
 	return true;
 }
 
-void Ran::transfer_data(int arg_dur, int arg_rate) {
+void Ran::transfer_data(int arg_dur, string arg_rate) {
 	string cmd;
 	string rate;	
 	string mtu;
@@ -329,7 +329,7 @@ void Ran::transfer_data(int arg_dur, int arg_rate) {
 	string redir_err;
 	string server_ip_addr;
 	int server_port;
-	rate = " -b " + to_string(arg_rate) + "M";
+	rate = " -b " + arg_rate + "M";
 	mtu = " -M " + to_string(DATA_SIZE);
 	dur = " -t " + to_string(arg_dur);
 	redir_err = " 2>&1";
@@ -341,7 +341,7 @@ void Ran::transfer_data(int arg_dur, int arg_rate) {
 	cout<<cmd<<endl;
 
 	TRACE(cout << cmd << endl;)
-	//system(cmd.c_str());
+	system(cmd.c_str());
 	TRACE(cout << "ran_transferdata:" << " transfer done for ran: " << ran_ctx.imsi << endl;)
 }
 
