@@ -1,0 +1,57 @@
+---
+#
+# This is an example for a profiling experiment descriptor (PED).
+# It defines profiling experiments for the sonata-fw-vtc-service-emu example service.
+#
+descriptor_version: 0.1
+# SONATA-like identifier (just in case we need it)
+vendor: "eu.sonata-nfv"
+name: "vEPC-profile-experiment"
+version: "0.1"
+author: "Steven Van Rossem"
+description: "This is an example profiling experiment descriptor (PED)."
+
+# path to the package of the service we want to profile
+service_package: "./vepc.son"
+
+#
+# First type of experiments: Service level experiments
+#
+service_experiments:
+  - name: "service_throughput"
+    description: "iperf test for entire service"
+    repetitions: 1
+    time_limit: "10"
+    # NSD to be used (SONATA-like vendor.name.version reference)
+    service: "eu.sonata-nfv.sonata-fw-vtc-service.0.1"
+    # additional containers for traffic generation/measurements (like SAPs)
+    measurement_points:
+      - name: "SGi"
+        configuration:
+          - "bash start_sink.sh"
+        cmd_order: 1
+      - name: "host"
+        configuration: 
+          - "bash /home/steven/Documents/SONATA/vEPC/son-epc/SOFTNETWORKING_vEPC/client.sh"
+        cmd: "bash /home/steven/Documents/SONATA/vEPC/son-epc/SOFTNETWORKING_vEPC/NFV_LTE_EPC-1.1/ran/start_ran_ctrl.sh 0.1"
+        cmd_order: 2
+# input_metrics: "msd.yml"
+    output_metrics: "msd_ctrl.yml"
+    # resource configurations to be tested during profiling run (defined per VNF)
+    resource_limitations:
+      - function: "hss1"
+        cpu_bw: "0.25"
+        cpu_cores: 1
+        mem_limit: 256m
+      - function: "mme1"
+        cpu_bw: "0.25"
+        cpu_cores: 1
+        mem_limit: 256m
+      - function: "sgw1"
+        cpu_bw: "0.25"
+        cpu_cores: 1
+        mem_limit: 256m
+      - function: "pgw1"
+        cpu_bw: "0.25"
+        cpu_cores: 1
+        mem_limit: 256m

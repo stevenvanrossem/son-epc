@@ -1,0 +1,68 @@
+
+---
+service_name: "vEPC-service"
+version: "0.1"
+author: "Steven Van Rossem, Ghent University, steven.vanrossem@intec.ugent.be"
+description: "Monitor descriptor for the vEPC service"
+dashboard: "son-monitor-vEPC"
+
+##
+## Metrics for a single VNF
+##
+vnf_metrics:
+  - metric_type: "cpu"
+    description: "cpu load (%)"
+    vnf_ids:
+      - vnf: "mme1" 
+      - vnf: "hss1" 
+      - vnf: "sgw1" 
+      - vnf: "pgw1" 
+  - metric_type: "mem"
+    description: "memory usage (MB)"
+    vnf_ids:
+      - vnf: "mme1" 
+      - vnf: "hss1" 
+      - vnf: "sgw1" 
+      - vnf: "pgw1" 
+  - metric_type: "packet_rate"
+    description: "packet rate (packets/sec)"
+    vnf_ids:
+      - vnf: "sgw1:S1-U"
+        direction: "rx"
+      - vnf: "sgw1:S5"
+        direction: "tx"
+      - vnf: "pgw1:S5"
+        direction: "rx"
+      - vnf: "sgw1:S11"
+        direction: "rx"
+      - vnf: "mme1:S11"
+        direction: "tx"
+      - vnf: "mme1:S6a"
+        direction: "rx"
+
+##
+## Metrics for an NSD link
+##
+nsd_links:
+  - metric_type: "packet_count"
+    description: "packet_count of links"
+    link_ids:
+      - description: "HSS rx packets"
+        link_id: "S6a-a"
+        source: "mme1:S6a"
+        destination: "hss1:S6a"
+        direction: "rx"
+      - description: "S11 SGW rx packets"
+        link_id: "S11-a"
+        source: "mme1:S11"
+        destination: "sgw1:S11"
+        direction: "rx"
+      - description: "vEPC input packets" 
+        link_id: "S1-U-a"
+        destination: "sgw1:S1-U"
+        source: "S1-U"
+        direction: "rx"
+
+
+
+
