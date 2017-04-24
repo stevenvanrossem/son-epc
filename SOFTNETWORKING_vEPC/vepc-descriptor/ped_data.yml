@@ -18,13 +18,13 @@ service_package: "./vepc.son"
 # First type of experiments: Service level experiments
 #
 service_experiments:
-  - name: "service_throughput"
+  - name: "vEPC_data_traffic"
     description: "iperf test for entire service"
     repetitions: 1
-    time_limit: "10"
+    time_limit: "8"
     # NSD to be used (SONATA-like vendor.name.version reference)
     service: "eu.sonata-nfv.sonata-fw-vtc-service.0.1"
-    # additional containers for traffic generation/measurements (like SAPs)
+    # containers configuration for traffic generation/measurements
     measurement_points:
       - name: "SGi"
         configuration:
@@ -32,27 +32,8 @@ service_experiments:
         cmd_order: 1
       - name: "host"
         configuration: 
-          - "bash /home/steven/Documents/SONATA/vEPC/son-epc/SOFTNETWORKING_vEPC/client.sh --stop"
-          - "bash /home/steven/Documents/SONATA/vEPC/son-epc/SOFTNETWORKING_vEPC/client.sh"
-        cmd: "bash /home/steven/Documents/SONATA/vEPC/son-epc/SOFTNETWORKING_vEPC/NFV_LTE_EPC-1.1/ran/start_ran_data.sh 0.1"
+          - "bash /home/steven/Documents/SONATA/vEPC/son-epc/SOFTNETWORKING_vEPC/NFV_LTE_EPC-1.1/ran/reset_data_traffic.sh"
+        cmd: "ping -I 172.16.1.3 172.16.0.2 -i${1, 0.1, 0.01, 0.001, 0.0001}"
         cmd_order: 2
-# input_metrics: "msd.yml"
     output_metrics: "msd_data.yml"
-    # resource configurations to be tested during profiling run (defined per VNF)
-    resource_limitations:
-      - function: "hss1"
-        cpu_bw: "0.25"
-        cpu_cores: 1
-        mem_limit: 256m
-      - function: "mme1"
-        cpu_bw: "0.25"
-        cpu_cores: 1
-        mem_limit: 256m
-      - function: "sgw1"
-        cpu_bw: "0.25"
-        cpu_cores: 1
-        mem_limit: 256m
-      - function: "pgw1"
-        cpu_bw: "0.25"
-        cpu_cores: 1
-        mem_limit: 256m
+

@@ -60,7 +60,7 @@ nsd_links:
         source: "S1-U"
         direction: "rx"
       - description: "vEPC output packets" 
-        link_id: "SGi-a"
+        link_id: "SGi-b"
         destination: "SGi"
         source: "pgw1:SGi"
         direction: "rx"

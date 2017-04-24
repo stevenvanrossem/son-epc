@@ -35,6 +35,23 @@ service_experiments:
           - "bash /home/steven/Documents/SONATA/vEPC/son-epc/SOFTNETWORKING_vEPC/client.sh"
         cmd: "bash /home/steven/Documents/SONATA/vEPC/son-epc/SOFTNETWORKING_vEPC/NFV_LTE_EPC-1.1/ran/start_ran_ctrl.sh ${0.1 to 0.3 step 0.1}"
         cmd_order: 2
-#input_metrics: "msd.yml"
-    output_metrics: "msd.yml"
-
+# input_metrics: "msd.yml"
+    output_metrics: "msd_ctrl.yml"
+    # resource configurations to be tested during profiling run (defined per VNF)
+    resource_limitations:
+      - function: "hss1"
+        cpu_bw: "0.25"
+        cpu_cores: 1
+        mem_limit: 256m
+      - function: "mme1"
+        cpu_bw: "0.25"
+        cpu_cores: 1
+        mem_limit: 256m
+      - function: "sgw1"
+        cpu_bw: "0.25"
+        cpu_cores: 1
+        mem_limit: 256m
+      - function: "pgw1"
+        cpu_bw: "0.25"
+        cpu_cores: 1
+        mem_limit: 256m
