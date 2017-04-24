@@ -105,11 +105,11 @@ void simulate(int arg) {
 			g_rtt_thread = thread(ping);
 			g_rtt_thread.detach();
 		}
-
+		*/
 
 		/* Data transfer */
-		//ran.transfer_data(g_req_dur, g_req_rate);
-		//sleep(g_req_dur);
+		ran.transfer_data(g_req_dur, g_req_rate);
+		sleep(g_req_dur);
 
 		// Detach
 		ok = ran.detach();
@@ -163,7 +163,7 @@ void run() {
 	g_traf_mon.client_count = g_threads_count;
 	g_traf_mon.initialize(); //initializing sgw client heads
 	// Uplink traffic monitor
-	/*
+	
 	for (i = 0; i < NUM_MONITORS; i++) {
 		g_umon_thread[i] = thread(utraffic_monitor);
 		g_umon_thread[i].detach();		
@@ -174,7 +174,7 @@ void run() {
 		g_dmon_thread[i] = thread(dtraffic_monitor);
 		g_dmon_thread[i].detach();			
 	}
-	*/
+	
 	// Simulator threads */
 	for (i = 0; i < g_threads_count; i++) {
 		g_threads[i] = thread(simulate, i);

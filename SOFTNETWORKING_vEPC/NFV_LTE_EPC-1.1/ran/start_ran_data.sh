@@ -1,12 +1,17 @@
 #!/bin/bash
+set -e 
 
 RATE=$1
 
 #clear any leftover tunnel from previous run
-ip l del dev tun1
+#ip l del dev tun1
 
 #start traffic
 cd /home/steven/Documents/SONATA/vEPC/son-epc/SOFTNETWORKING_vEPC/NFV_LTE_EPC-1.1/ran/
-./ransim_data.out --threads_count 1 --duration 10 --rate $RATE --ran_ip_addr 10.10.1.1 --trafmon_ip_addr 10.10.1.1 --mme_ip_addr 10.10.0.2 --sgw_s1_ip_addr 10.10.1.2
+#PING_RATE=$(bc -l <<< "1/$RATE")
+PING_RATE=$1
+echo $PING_RATE
+ping -I 172.16.1.3 172.16.0.2 -i$PING_RATE 
+
 
 

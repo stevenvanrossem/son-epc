@@ -336,12 +336,12 @@ void Ran::transfer_data(int arg_dur, string arg_rate) {
 	server_ip_addr = "172.16.0.2";
 	server_port = ran_ctx.key + 55000;
 	g_nw.add_itf(ran_ctx.key, ran_ctx.ip_addr + "/8");
-	cmd = "iperf3 -B " + ran_ctx.ip_addr + " -c " + server_ip_addr + " -p " + to_string(server_port) + rate + mtu + dur + redir_err;
+	cmd = "iperf3 -B " + ran_ctx.ip_addr + " -c " + server_ip_addr + " -u -p " + to_string(server_port) + rate + mtu + dur + redir_err;
 
 	cout<<cmd<<endl;
 
 	TRACE(cout << cmd << endl;)
-	system(cmd.c_str());
+	//system(cmd.c_str());
 	TRACE(cout << "ran_transferdata:" << " transfer done for ran: " << ran_ctx.imsi << endl;)
 }
 

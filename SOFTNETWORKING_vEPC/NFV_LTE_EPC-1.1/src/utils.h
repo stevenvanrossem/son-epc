@@ -1,6 +1,6 @@
 #ifndef UTILS_H
 #define UTILS_H
-#define DEBUG 1
+#define DEBUG 0
 /* (C++) chrono: high_resolution_clock, microseconds */
 #include <chrono>
 
