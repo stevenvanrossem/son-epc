@@ -1,5 +1,5 @@
 catalogues: [personal]
-description: "vEPC service based on https://github.com/networkedsystemsIITB/NFV_LTE_EPC"
+description: "vEPC service based on OpenAirInterface"
 maintainer: "Steven Van Rossem, Janos Elek, Thomas Soenen"
 name: "sonata-vepc-service"
 publish_to: [personal]

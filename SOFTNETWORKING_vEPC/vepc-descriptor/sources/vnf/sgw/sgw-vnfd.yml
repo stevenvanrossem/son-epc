@@ -51,7 +51,7 @@ virtual_links:
       - "vdu01:cp01"
       - "S1-U"
   - id: "S11"
-    connectivity_type: "E-LAN"
+    connectivity_type: "E-Line"
     connection_points_reference:
       - "vdu01:cp02"
       - "S11"

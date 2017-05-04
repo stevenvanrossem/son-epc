@@ -36,6 +36,9 @@ virtual_deployment_units:
       - id: "vdu01:cp03"
         interface: "ipv4"
         type: "management"
+      - id: "vdu01:cp04"
+        interface: "ipv4"
+        type: "management"
 
 ##
 ## The virtual links that interconnect
@@ -47,15 +50,20 @@ virtual_links:
     connection_points_reference:
       - "vdu01:cp01"
       - "S1-MME"
-  - id: "S11-S6a"
-    connectivity_type: "E-LAN"
+  - id: "S11"
+    connectivity_type: "E-Line"
     connection_points_reference:
-      - "vdu01:cp01"
-      - "S11-S6a"
+      - "vdu01:cp02"
+      - "S11"
+  - id: "S6a"
+    connectivity_type: "E-Line"
+    connection_points_reference:
+      - "vdu01:cp03"
+      - "S6a"
   - id: "mgmt"
     connectivity_type: "E-LAN"
     connection_points_reference:
-      - "vdu01:cp02"
+      - "vdu01:cp04"
       - "mgmt"
 
 ##
@@ -66,7 +74,10 @@ connection_points:
   - id: "S1-MME"
     interface: "ipv4"
     type: "external"
-  - id: "S11-S6a"
+  - id: "S11"
+    interface: "ipv4"
+    type: "external"
+  - id: "S6a"
     interface: "ipv4"
     type: "external"
   - id: "mgmt"

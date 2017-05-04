@@ -16,7 +16,7 @@
 time_t g_start_time;
 int g_threads_count;
 uint64_t g_req_dur;
-uint64_t g_req_rate;
+string g_req_rate;
 uint64_t g_run_dur;
 int g_tot_regs;
 uint64_t g_tot_regstime;
@@ -105,7 +105,7 @@ void simulate(int arg) {
 			g_rtt_thread = thread(ping);
 			g_rtt_thread.detach();
 		}
-
+		*/
 
 		/* Data transfer */
 		ran.transfer_data(g_req_dur, g_req_rate);
@@ -163,6 +163,7 @@ void run() {
 	g_traf_mon.client_count = g_threads_count;
 	g_traf_mon.initialize(); //initializing sgw client heads
 	// Uplink traffic monitor
+	
 	for (i = 0; i < NUM_MONITORS; i++) {
 		g_umon_thread[i] = thread(utraffic_monitor);
 		g_umon_thread[i].detach();		
@@ -173,7 +174,7 @@ void run() {
 		g_dmon_thread[i] = thread(dtraffic_monitor);
 		g_dmon_thread[i].detach();			
 	}
-
+	
 	// Simulator threads */
 	for (i = 0; i < g_threads_count; i++) {
 		g_threads[i] = thread(simulate, i);
@@ -205,7 +206,7 @@ void readConfig(int ac, char *av[]) {
   desc.add_options()
     (THREADS_COUNT, po::value<int>(), "Number of threads")
     (DURATION, po::value<int>(), "Duration in seconds")
-    (RATE, po::value<int>(), "Rate of sent traffic by iperf in Mbps")
+    (RATE, po::value<string>(), "Rate of sent traffic by iperf in Mbps")
     (RAN_IP_ADDR, po::value<string>(), "IP address of the simulator")
     (TRAFMON_IP_ADDR, po::value<string>(), "IP address of the traffic monitor")
     (MME_S1_IP_ADDR, po::value<string>(), "IP address of the MME's S1 interface")
@@ -232,7 +233,7 @@ void readConfig(int ac, char *av[]) {
   }
 
   g_req_dur = vm[DURATION].as<int>();;
-  g_req_rate = vm[RATE].as<int>();;
+  g_req_rate = vm[RATE].as<string>();;
   g_threads_count = vm[THREADS_COUNT].as<int>();;
 
   g_ran_ip_addr = vm[RAN_IP_ADDR].as<string>();
